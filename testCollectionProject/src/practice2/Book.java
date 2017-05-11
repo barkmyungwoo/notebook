@@ -3,18 +3,19 @@ package practice2;
 import java.io.Serializable;
 
 public class Book implements Serializable{
-	private String bNo ; 	//도서번호
-	private int category ;    //도서분류코드(1.인문/2.자연과학/3.의료/4.기타)
-	private String title ; 	//책제목
-	private String author;	//저자
+	private String bNo ; 																//도서번호
+	private int category ;   												 			//도서분류코드(1.인문/2.자연과학/3.의료/4.기타)
+	private String title ; 																//책제목
+	private String author;																//저자
 
-	public Book(String bNo, int category, String title, String author) {
+	public Book() {}																	// 기본 생성자 
+
+	public Book(String bNo, int category, String title, String author) {				// 메개변수 생성자
 		this.bNo = bNo;
 		this.category = category;
 		this.title = title;
 		this.author = author;
 	}
-	public Book() {}
 
 	public String getbNo() {
 		return bNo;

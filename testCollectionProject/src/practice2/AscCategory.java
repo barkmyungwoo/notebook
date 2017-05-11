@@ -15,7 +15,6 @@ public class AscCategory implements Comparator {
 			result = (p1.getCategory() > p2.getCategory())? 1 : (p1.getCategory() == p2.getCategory()) ? 0 : -1;
 		}
 		return result;
-
 	}
 
 }

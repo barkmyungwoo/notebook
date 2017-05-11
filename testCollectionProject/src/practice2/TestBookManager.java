@@ -29,19 +29,19 @@ public class TestBookManager {
 
 			switch (name) {
 			case 1:
-				Book book = inputBook();
-				bm.addBook(book);
+				Book book = inputBook();						// inputBook()에서 반환한 값 선언된 book에 저장	
+				bm.addBook(book);								// ArrayList에 저장
 				break;
 
 			case 2:
-				Book[] bookArray = bm.sortedBookList();
-				bm.printBookList(bookArray);
+				Book[] bookArray = bm.sortedBookList();			// bookArray를 선언과 동시에 정렬된 Book배열 반환 받차 저장
+				bm.printBookList(bookArray);					// bookArray를 전송 출력. 매개변수 있음!!!
 				break;
 
 			case 3:
 				System.out.print("삭제할 도서 번호를 입력해 주세요 : ");
 				index = sc.nextInt();
-				bm.deleteBook(index);
+				bm.deleteBook(index);							
 				break;
 
 			case 4:
@@ -50,17 +50,17 @@ public class TestBookManager {
 				sc.nextLine();
 				str = sc.nextLine();
 
-				index = bm.searchBook(str);
+				index = bm.searchBook(str);						// 검색어를 String 형으로 매개변수로 전송해서 그 위치값을 int로 받아서 저장.
 
-				if(index==-1)
+				if(index==-1)									// 책이 없을 때. -1을 반환 받음.
 					System.out.println("그런 책 없다.");
 				else
-					bm.printBook(index);
+					bm.printBook(index);						// 반환값을 매개변수로 이용 전달하여 출력.
 				
 				break;
 
 			case 5:
-				bm.displayAll();
+				bm.displayAll();								// 매개 변수가 없다!!!! BookManager 안에서 ArrayList를 이용 출력됨.
 				break;
 
 			case 6: 

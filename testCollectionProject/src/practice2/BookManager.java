@@ -21,20 +21,20 @@ public class BookManager {
 	}
 
 	public void deleteBook(int index) {
-		bookList.remove(index);
+		bookList.remove(index);													// ArrayList 상에서 위치 값 이용 삭제.
 	}
 
 	public int searchBook(String bTitle) {
-		Object[] ob = bookList.toArray();
-		Book[] book = new Book[ob.length];
+		Object[] ob = bookList.toArray();										//ArrayList에서 Object 배열에 저장
+		Book[] book = new Book[ob.length];										// Book 배열 선언
 		
 		for (int i = 0; i <book.length ; i++) {
-			book[i] = (Book)ob[i];
+			book[i] = (Book)ob[i];												//Book배열 초기화 Object 배열 Book 타입 형변환.
 		}
 
 		for (int i = 0; i < book.length; i++) {
-			if (book[i].getTitle().equals(bTitle) == true) {
-				return i;
+			if (book[i].getTitle().equals(bTitle) == true) {					// 책 이름 비교 검색
+				return i;														// 인덱스 반환
 			}
 		}
 
@@ -42,15 +42,13 @@ public class BookManager {
 	}
 
 	public void printBook(int index) {
-		System.out.println(bookList.get(index));
+		System.out.println(bookList.get(index));								// arrayList 상에서 위치값 이용 출력.
 	}
 
 	public void displayAll() {
-
-		for (Object object : bookList) {
-			System.out.println(object);
+		for (Object object : bookList) {										// foreach 이용 전체 출력.
+			System.out.println(object);	
 		}
-
 	}
 
 	public Book[] sortedBookList() {
@@ -73,5 +71,4 @@ public class BookManager {
 			System.out.println(book);
 		}
 	}
-
 }
