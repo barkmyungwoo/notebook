@@ -1,9 +1,6 @@
 package practice2;
 
-import java.util.ArrayList;
-import java.util.Scanner;
-
-import test.list.Person;
+import java.util.*;
 
 public class TestBookManager {
 	private Scanner sc = new Scanner(System.in);
@@ -17,16 +14,7 @@ public class TestBookManager {
 
 		BookManager bm = new BookManager();
 		int name, index = 0;
-		Book book;
-
-		Book[] bookArray;
-		// al.add(new Book("0001", 1, "java 공부하기", "박명우"));
-		// al.add(new Book("0002", 2, "oracle 공부하기", "박제언"));
-		// al.add(new Book("0003", 2, "jdbc 공부하기", "이재훈"));
-		// al.add(new Book("0004", 3, "javascript 공부하기", "나상민"));
-		// al.add(new Book("0005", 4, "html 공부하기", "유재영"));
-		// al.add(new Book("0006", 3, "DB 공부하기", "안재성"));
-
+		
 		do {
 			System.out.println("*** 도서 관리 프로그램 ***");
 
@@ -40,26 +28,35 @@ public class TestBookManager {
 			name = sc.nextInt();
 
 			switch (name) {
-
 			case 1:
-				book = inputBook();
+				Book book = inputBook();
 				bm.addBook(book);
 				break;
 
 			case 2:
-				bookArray = bm.sortedBookList();
+				Book[] bookArray = bm.sortedBookList();
 				bm.printBookList(bookArray);
 				break;
 
 			case 3:
+				System.out.print("삭제할 도서 번호를 입력해 주세요 : ");
+				index = sc.nextInt();
 				bm.deleteBook(index);
 				break;
 
 			case 4:
 				String str = "";
-				str = sc.next();
+				System.out.print("검색할 도서명을 입력해 주세요 : ");
+				sc.nextLine();
+				str = sc.nextLine();
+
 				index = bm.searchBook(str);
-				bm.printBook(index);
+
+				if(index==-1)
+					System.out.println("그런 책 없다.");
+				else
+					bm.printBook(index);
+				
 				break;
 
 			case 5:
