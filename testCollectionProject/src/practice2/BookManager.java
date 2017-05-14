@@ -1,5 +1,6 @@
 package practice2;
 
+import java.lang.invoke.SwitchPoint;
 import java.util.*;
 
 public class BookManager {
@@ -59,16 +60,20 @@ public class BookManager {
 		Object[] ob = bookList.toArray();
 		Book[] book = new Book[ob.length];
 		
+		
 		for (int i = 0; i <book.length ; i++) {
 			book[i] = (Book)ob[i];
 		}
-
+		
 		return book;
 	}
-
 	public void printBookList(Book[] br) {
+		
 		for (Book book : br) {
 			System.out.println(book);
 		}
+//		for (Book book : br) {
+//			System.out.println(book);
+//		}
 	}
 }
