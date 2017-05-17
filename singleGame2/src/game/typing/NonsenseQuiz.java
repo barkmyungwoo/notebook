@@ -5,7 +5,7 @@ import java.util.Scanner;
 
 public class NonsenseQuiz {
 
-	public static void main(String[] args) {
+	public void start() {
 		String fileName = "quiz.dat";
 		String[] str = new String[2];
 		String str2 = null;
