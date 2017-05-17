@@ -23,7 +23,6 @@ public class TypingGame {
 				str = fi.readLine();
 			}
 
-
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
