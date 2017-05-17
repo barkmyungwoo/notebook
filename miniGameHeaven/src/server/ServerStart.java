@@ -9,36 +9,34 @@ import game.NonsenseQuiz;
 public class ServerStart {
 
 	private ServerSocket server;
-	private BManager bMan = new BManager(); // 메시지 방송자 받은 메세지를 다른 클라이언트에게 뿌림.
-	Buffer buffer = new Buffer();
-	private int gameOn = 0;
+	private BManager bMan = new BManager();
 
-	public ServerStart() {
-	} // 매게 변수 없는 생성자
+	int gameOn = 0;
+	private String question = null;
+	private String answer = null;
+	Game_Thread gt = new Game_Thread();
 
-	public static void main(String[] args) { // 1. 시작.
-		ServerStart server = new ServerStart(); // 서버 할당
-		server.startServer(); // 서버 시작
+	public ServerStart() {} 
+
+
+	//실행
+	public static void main(String[] args) { 
+		ServerStart server = new ServerStart();
+		server.startServer();
 	}
 
+	//메인 
 	void startServer() {
 		try {
-			server = new ServerSocket(7777); // 포트 7777
-			Game_Thread gt = new Game_Thread(buffer);
-
+			server = new ServerSocket(7777);
 			System.out.println("서버소켓이 생성되었습니다.");
-
 			gt.start();
 
 			while (true) {
-				Socket socket = server.accept(); // 서버 소켓 접속
-
-				new Chat_Thread(socket, buffer).start(); // 클라이언트와 통신하는 스레드를
-															// 생성하고 실행시킨다.
-				bMan.add(socket); // 방송자의 리스트에 socket을 추가한다.
-				bMan.sendClientInfo(socket); // 방송자는 모든 클라이언트에게 현재 접속 인원의 수를
-												// 전송한다.
-
+				Socket socket = server.accept(); 
+				new Chat_Thread(socket).start(); 
+				bMan.add(socket); 
+				bMan.sendClientInfo(socket);
 				System.out.println(bMan);
 			}
 		} catch (Exception e) {
@@ -46,16 +44,15 @@ public class ServerStart {
 		}
 	}
 
-	// 클라이언트와 통신하는 스레드 클래스
+	
+	// 클라이언트와 통신하는 스레드 클래스. (게임 정답 받음. 대화 받음.)
 	class Chat_Thread extends Thread {
 		Socket socket;
 		private BufferedReader reader;
 		private PrintWriter writer;
-		private Buffer buffer;
 
-		public Chat_Thread(Socket socket, Buffer buffer) {
+		public Chat_Thread(Socket socket) {
 			this.socket = socket;
-			this.buffer = buffer;
 		}
 
 		public void run() {
@@ -63,17 +60,17 @@ public class ServerStart {
 				reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 				writer = new PrintWriter(socket.getOutputStream(), true);
 				String msg;
-				while ((msg = reader.readLine()) != null) { // 입력 스트림으로부터 메시지를
-															// 얻는다.
-					buffer.set(msg);
+				while ((msg = reader.readLine()) != null) { 															
 					System.out.println(msg);
-					gameCheck(msg);
-					bMan.sendToAll(msg); // 모든 클라이언트에게 메시지를 전송한다.
+					if (gameOn == 1) {
+						answerCheck(msg);
+					}
+					bMan.sendToAll(msg); 
 				}
 			} catch (Exception e) {
 			} finally {
 				try {
-					bMan.remove(socket); // 방송자의 리스트에서 socket을 제거한다.
+					bMan.remove(socket); 
 
 					if (reader != null)
 						reader.close();
@@ -85,28 +82,34 @@ public class ServerStart {
 					writer = null;
 					socket = null;
 					System.out.println("클라이언트가 나갔습니다.");
-					bMan.sendClientInfo(socket); // 모든 클라이언트에게 현재 접속 인원의 수를
-													// 전송한다.
+					bMan.sendClientInfo(socket);
 				} catch (Exception e) {
 				}
 			}
 		}
 	}
 
+	
+	// 게임 쓰레드. 랜덤으로 게임 발생.
 	class Game_Thread extends Thread {
-		private Buffer buffer;
-
-		public Game_Thread(Buffer buffer) {
-			this.buffer = buffer;
+		public Game_Thread() {
 		}
 
 		public void run() {
-			int gameTerm = 10;
+			int gameTerm = 20;	// 게임 REROAD 시간
+			int gameKinds = 2;	// 게임 종류
+			int cnt = 0;		// 정답이 없을때 사용
 
 			do {
+				try {
+					System.out.println("while Check;" + cnt);
+					Thread.sleep(1000);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+
 				if (gameOn == 0) {
-					gameOn = 1;
-					for (int i = gameTerm; i > 0; i--) { // 20초 셋팅.
+					for (int i = gameTerm; i >= 0;) {
 						System.out.println(i);
 						try {
 							Thread.sleep(1000);
@@ -116,126 +119,118 @@ public class ServerStart {
 
 						if (i < 6)
 							bMan.sendToAll("· 게임" + i + "초전");
-						else
+						else if (i < 17)
 							bMan.sendToAll("· 곧 게임이 시작 됩니다.");
 
+						i--;
+					}
+					
+					
+					int num = (int) (Math.random() * gameKinds);
+					System.out.println("게임 타입" + num);
+
+					
+					switch (num) {
+					case 0:
+						String[] str = new game.NonsenseQuiz().start();
+						bMan.sendToAll("·" + str[0]);
+						answer = str[1].trim();
+						gameOn = 1;
+						cnt = 0;
+						break;
+					case 1:
+						String str1 = new game.TypingGame().start();
+						bMan.sendToAll("·" + str1);
+						answer = str1.trim();
+						gameOn = 1;
+						cnt = 0;
+						break;
+					case 2:
+						cnt = 0;
+						break;
+					case 3:
+						cnt = 0;
+						break;
 					}
 
-					new NonsenseQuiz(buffer).start();
+				} else {
+					try {
+						Thread.sleep(1000);
+						cnt++;
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+					if (cnt == 60) {
+						gameOn = 0;
+						try {
+							bMan.sendToAll("· 정답이 없네요. 다음 게임을 준비 중 입니다.");
+							Thread.sleep(2000);
+						} catch (InterruptedException e) {
+							e.printStackTrace();
+						}
+						cnt = 0;
+					}
 				}
 			} while (true);
 		}
 	}
+	
+	
+	//정답 체크
+	private void answerCheck(String msg) {
+		String[] str = new String[2];
+		str = msg.split(":");
+		str[0] = str[0].trim();
+		str[1] = str[1].trim();
 
-	public class NonsenseQuiz extends Thread {
-		private Buffer buffer;
-		private String answer = null;
+		System.out.println(answer);
+		System.out.println(str[0]);
+		System.out.println(str[1]);
 
-		public NonsenseQuiz(Buffer buffer) {
-			this.buffer = buffer;
-		}
-
-		public void checkedAnswer(String str) {
-			if (answer.equals(str)) {
-				bMan.sendToAll("정답입니다.");
-				notify();
-			}
-		}
-
-		public void start() {
-			String fileName = "quiz.dat";
-			String[] str = new String[2];
-			String[] sstr = new String[2];
-			String str2 = null;
-			String str3 = null;
-			int line;
-
-			try (BufferedReader fi = new BufferedReader(new FileReader(fileName));) {
-				line = (int) (Math.random() * 18 + 1); // 문제 랜덤 선택하기
-
-				for (int i = 0; i < line; i++) {
-					str = fi.readLine().split("-");
-				}
-
-				bMan.sendToAll("·" + str[0]);
-
-				buffer.set(str[1]);
-				System.out.println("test"+str[1]);
-
-			}
-
-			catch (FileNotFoundException e) {
-				e.printStackTrace();
-			} catch (IOException e) {
-				e.printStackTrace();
-			} finally {
-				// System.out.println("경과 시간 : " + (end - start) / 1000 + "초 " +
-				// (end - start) % 1000);
-			}
+		if (str[1].equals(answer)) {
+			gameOn = 0;
+			bMan.sendToAll("-------------------- " + str[0] + "님 정답입니다!!! --------------------");
+			bMan.sendToAll("· 다음 게임을 준비 합니다.");
 		}
 	}
-
-	class BManager extends Vector { // 메시지 방송자 클래스, Vector를 상속한다.
-		int win = 0;
-		int looser = 0;
+	
+	
+	//소켓 정보를 저장 
+	class BManager extends Vector {
 
 		BManager() {
 		}
 
-		void add(Socket sock) { // 소켓을 추가한다.
+		void add(Socket sock) {
 			super.add(sock);
 		}
 
-		void remove(Socket sock) { // 소켓을 제거한다.
+		void remove(Socket sock) {
 			super.remove(sock);
 		}
 
-		synchronized void sendToAll(String msg) { // 모든 클라이언트에게 msg를 전송한다. 동기화
-													// 메소드
-			PrintWriter writer = null; // 출력 스트림
-			Socket sock; // 소켓
+		synchronized void sendToAll(String msg) { 
+			PrintWriter writer = null;
+			Socket sock;
 
-			for (int i = 0; i < size(); i++) { // 소켓의 개수만큼 반복 실행
-				sock = (Socket) elementAt(i); // i번째 소켓을 얻는다.
+			for (int i = 0; i < size(); i++) {
+				sock = (Socket) elementAt(i);
 
 				try {
-					writer = new PrintWriter(sock.getOutputStream(), true); // i번째
-																			// 소켓의
-																			// 출력
-																			// 스트림을
-																			// 얻는다.
+					writer = new PrintWriter(sock.getOutputStream(), true);
 				} catch (IOException ie) {
 				}
 
-				if (writer != null) // i번째 소켓의 출력 스트림으로 msg를 출력한다.
+				if (writer != null)
 					writer.println(msg);
 			}
 		}
 
-		synchronized void sendClientInfo(Socket sock) { // 모든 클라이언트에게 현재 채팅 인원의
-														// 수를 전송한다.
-			String info = "현재 채팅 인원  : " + size(); // + sock.toString();
+		synchronized void sendClientInfo(Socket sock) {
+			String info = "현재 채팅 인원  : " + size();
+
 			System.out.println(info);
 			sendToAll(info);
 		}
-	}
-
-	public void gameCheck(String msg) {
-		String[] message = msg.split(":");
-		String ans=null;
-		String s = "정답입니다.";
-		
-		
-		System.out.println("test1");
-		System.out.println(message[0]);
-		System.out.println(message[1]);
-		ans = message[1].trim();
-		System.out.println(ans);
-		if(ans.equals(buffer.get())==true){
-			gameOn=0;
-			bMan.sendToAll(s);
-		}
-		System.out.println(buffer.get());
-		
 	}
 }
