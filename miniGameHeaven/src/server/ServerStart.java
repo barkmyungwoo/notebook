@@ -11,6 +11,7 @@ public class ServerStart {
 	private ServerSocket server;
 	private BManager bMan = new BManager(); // 메시지 방송자 받은 메세지를 다른 클라이언트에게 뿌림.
 	Buffer buffer = new Buffer();
+	private int gameOn = 0;
 
 	public ServerStart() {
 	} // 매게 변수 없는 생성자
@@ -35,8 +36,9 @@ public class ServerStart {
 				new Chat_Thread(socket, buffer).start(); // 클라이언트와 통신하는 스레드를
 															// 생성하고 실행시킨다.
 				bMan.add(socket); // 방송자의 리스트에 socket을 추가한다.
-				bMan.sendClientInfo(socket); // 방송자는 모든 클라이언트에게 현재 접속 인원의 수를 전송한다.
-				
+				bMan.sendClientInfo(socket); // 방송자는 모든 클라이언트에게 현재 접속 인원의 수를
+												// 전송한다.
+
 				System.out.println(bMan);
 			}
 		} catch (Exception e) {
@@ -65,6 +67,7 @@ public class ServerStart {
 															// 얻는다.
 					buffer.set(msg);
 					System.out.println(msg);
+					gameCheck(msg);
 					bMan.sendToAll(msg); // 모든 클라이언트에게 메시지를 전송한다.
 				}
 			} catch (Exception e) {
@@ -98,26 +101,28 @@ public class ServerStart {
 		}
 
 		public void run() {
-			int gameTerm = 20;
+			int gameTerm = 10;
 
 			do {
-				for (int i = gameTerm; i > 0; i--) { // 20초 셋팅.
-					System.out.println(i);
-					try {
-						Thread.sleep(1000);
-					} catch (InterruptedException e) {
-						e.printStackTrace();
+				if (gameOn == 0) {
+					gameOn = 1;
+					for (int i = gameTerm; i > 0; i--) { // 20초 셋팅.
+						System.out.println(i);
+						try {
+							Thread.sleep(1000);
+						} catch (InterruptedException e) {
+							e.printStackTrace();
+						}
+
+						if (i < 6)
+							bMan.sendToAll("· 게임" + i + "초전");
+						else
+							bMan.sendToAll("· 곧 게임이 시작 됩니다.");
+
 					}
 
-					if (i < 6)
-						bMan.sendToAll("· 게임" + i + "초전");
-					else
-						bMan.sendToAll("· 곧 게임이 시작 됩니다.");
-
+					new NonsenseQuiz(buffer).start();
 				}
-				//--------------------------------------------------------------------------------------
-				
-				new NonsenseQuiz(buffer).start();
 			} while (true);
 		}
 	}
@@ -154,14 +159,9 @@ public class ServerStart {
 
 				bMan.sendToAll("·" + str[0]);
 
-				answer = str[1];
+				buffer.set(str[1]);
+				System.out.println("test"+str[1]);
 
-				try {
-					wait();
-				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
 			}
 
 			catch (FileNotFoundException e) {
@@ -218,5 +218,24 @@ public class ServerStart {
 			System.out.println(info);
 			sendToAll(info);
 		}
+	}
+
+	public void gameCheck(String msg) {
+		String[] message = msg.split(":");
+		String ans=null;
+		String s = "정답입니다.";
+		
+		
+		System.out.println("test1");
+		System.out.println(message[0]);
+		System.out.println(message[1]);
+		ans = message[1].trim();
+		System.out.println(ans);
+		if(ans.equals(buffer.get())==true){
+			gameOn=0;
+			bMan.sendToAll(s);
+		}
+		System.out.println(buffer.get());
+		
 	}
 }
