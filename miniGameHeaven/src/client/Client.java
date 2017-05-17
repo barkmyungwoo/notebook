@@ -9,16 +9,18 @@ import javax.swing.JFrame;
 import java.io.*;
 
 public class Client extends JFrame implements Runnable {
-	private TextField nameBox = new TextField("박명우"); // 사용자 이름을 나타낸다.
+	private String name = "박명우";
+	private TextField nameBox = new TextField(name+"님 환영합니다.");
+
 	private TextArea msgView = new TextArea();
 	private TextField sendBox = new TextField();
 	private BufferedReader reader;
 	private PrintWriter writer;
 	private Socket socket;
-	private String name = "박명우";
 
 	public static void main(String[] args) {
 		Client client = new Client("채팅");
+		client.setDefaultCloseOperation(EXIT_ON_CLOSE);
 		client.setVisible(true);
 		client.connect();
 	}

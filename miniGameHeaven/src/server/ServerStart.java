@@ -15,6 +15,7 @@ public class ServerStart {
 	private String question = null;
 	private String answer = null;
 	Game_Thread gt = new Game_Thread();
+	long start=0, end=0;
 
 	public ServerStart() {} 
 
@@ -102,7 +103,7 @@ public class ServerStart {
 
 			do {
 				try {
-					System.out.println("while Check;" + cnt);
+					System.out.println("while Check " + cnt);
 					Thread.sleep(1000);
 				} catch (InterruptedException e) {
 					e.printStackTrace();
@@ -141,6 +142,7 @@ public class ServerStart {
 					case 1:
 						String str1 = new game.TypingGame().start();
 						bMan.sendToAll("·" + str1);
+						start = System.currentTimeMillis();
 						answer = str1.trim();
 						gameOn = 1;
 						cnt = 0;
@@ -189,7 +191,11 @@ public class ServerStart {
 
 		if (str[1].equals(answer)) {
 			gameOn = 0;
+			end = System.currentTimeMillis();
 			bMan.sendToAll("-------------------- " + str[0] + "님 정답입니다!!! --------------------");
+			if(start!=0)
+				bMan.sendToAll("경과 시간 : " +(end - start)/1000+"초 "+(end-start)%1000);
+			start=0;
 			bMan.sendToAll("· 다음 게임을 준비 합니다.");
 		}
 	}
