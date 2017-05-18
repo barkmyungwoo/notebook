@@ -16,18 +16,21 @@ public class ServerStart {
 	private String question = null;
 	private String answer = null;
 	Game_Thread gt = new Game_Thread();
-	long start=0, end=0;
+	long start = 0, end = 0;
+	String[] userName = new String[30];
+	String[] tmp = new String[2];
+	int cnt = 0;
 
-	public ServerStart() {} 
+	public ServerStart() {
+	}
 
-
-	//실행
-	public static void main(String[] args) { 
+	// 실행
+	public static void main(String[] args) {
 		ServerStart server = new ServerStart();
 		server.startServer();
 	}
 
-	//메인 
+	// 메인
 	void startServer() {
 		try {
 			server = new ServerSocket(7777);
@@ -35,9 +38,9 @@ public class ServerStart {
 			gt.start();
 
 			while (true) {
-				Socket socket = server.accept(); 
-				new Chat_Thread(socket).start(); 
-				bMan.add(socket); 
+				Socket socket = server.accept();
+				new Chat_Thread(socket).start();
+				bMan.add(socket);
 				bMan.sendClientInfo(socket);
 				System.out.println(bMan);
 			}
@@ -46,7 +49,6 @@ public class ServerStart {
 		}
 	}
 
-	
 	// 클라이언트와 통신하는 스레드 클래스. (게임 정답 받음. 대화 받음.)
 	class Chat_Thread extends Thread {
 		Socket socket;
@@ -62,9 +64,17 @@ public class ServerStart {
 				reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 				writer = new PrintWriter(socket.getOutputStream(), true);
 				String msg;
-				while ((msg = reader.readLine()) != null) { 															
+				while ((msg = reader.readLine()) != null) {
 					System.out.println(msg);
-					bMan.sendToAll(msg); 
+
+					if (msg.charAt(0) == '/') {
+						tmp = msg.split("/");
+						userName[cnt] = tmp[1].trim();
+						cnt++;
+						System.out.println("이것봐라." + cnt);
+					}
+
+					bMan.sendToAll(msg);
 					if (gameOn == 1) {
 						answerCheck(msg);
 					}
@@ -72,7 +82,7 @@ public class ServerStart {
 			} catch (Exception e) {
 			} finally {
 				try {
-					bMan.remove(socket); 
+					bMan.remove(socket);
 
 					if (reader != null)
 						reader.close();
@@ -91,16 +101,15 @@ public class ServerStart {
 		}
 	}
 
-	
 	// 게임 쓰레드. 랜덤으로 게임 발생.
 	class Game_Thread extends Thread {
 		public Game_Thread() {
 		}
 
 		public void run() {
-			int gameTerm = 20;	// 게임 REROAD 시간
-			int gameKinds = 3;	// 게임 종류
-			int cnt = 0;		// 정답이 없을때 사용
+			int gameTerm = 20; // 게임 REROAD 시간
+			int gameKinds = 3; // 게임 종류
+			int cnt = 0; // 정답이 없을때 사용
 
 			do {
 				try {
@@ -126,43 +135,41 @@ public class ServerStart {
 
 						i--;
 					}
-					
-					
+
 					int num = (int) (Math.random() * gameKinds);
 					System.out.println("게임 타입" + num);
 
-					
 					switch (num) {
-					case 0:						// 퀴즈 게임
+					case 0: // 퀴즈 게임
 						String[] str = new game.NonsenseQuiz().start();
 						bMan.sendToAll("·" + str[0]);
 						answer = str[1].trim();
 						gameOn = 1;
-						gameType=0;
+						gameType = 0;
 						cnt = 0;
-						break;	
-					case 1:						// 타자 연습 게임
+						break;
+					case 1: // 타자 연습 게임
 						String str1 = new game.TypingGame().start();
 						bMan.sendToAll("·" + str1);
 						start = System.currentTimeMillis();
 						answer = str1.trim();
 						gameOn = 1;
-						gameType= 1;
+						gameType = 1;
 						cnt = 0;
 						break;
-					case 2:						// 베이스볼 게임
+					case 2: // 베이스볼 게임
 						String str2 = new game.BaseBallGame().start();
 						answer = str2.trim();
-						bMan.sendToAll("· 베이스볼 게임. 중복되지 않는 4자리 숫자를 입력 하세요.");						
+						bMan.sendToAll("· 베이스볼 게임. 중복되지 않는 4자리 숫자를 입력 하세요.");
 						gameOn = 1;
 						gameType = 2;
 						cnt = 0;
 						break;
-					case 3:						//화살표 게임
+					case 3: // 화살표 게임
 						gameType = 3;
 						cnt = 0;
 						break;
-					case 4:						//레이싱 게임
+					case 4: // 레이싱 게임
 						gameType = 4;
 						cnt = 0;
 						break;
@@ -189,9 +196,8 @@ public class ServerStart {
 			} while (true);
 		}
 	}
-	
-	
-	//정답 체크
+
+	// 정답 체크
 	private void answerCheck(String msg) {
 		String[] str = new String[2];
 		str = msg.split(":");
@@ -206,18 +212,20 @@ public class ServerStart {
 			gameOn = 0;
 			end = System.currentTimeMillis();
 			bMan.sendToAll("-------------------- " + str[0] + "님 정답입니다!!! --------------------");
-			if(gameType==1)
-				bMan.sendToAll("경과 시간 : " +(end - start)/1000+"초 "+(end-start)%1000);
-			start=0;
+			if (gameType == 1)
+				bMan.sendToAll("경과 시간 : " + (end - start) / 1000 + "초 " + (end - start) % 1000);
+			start = 0;
 			bMan.sendToAll("· 다음 게임을 준비 합니다.");
-		}
-		else if(gameType==2){
-			bMan.sendToAll(new game.BaseBallGame().countSB(answer,str[1]));		// 오답 체크 스트라이크 볼 체크.
+		} else if (gameType == 2) {
+			bMan.sendToAll(new game.BaseBallGame().countSB(answer, str[1])); // 오답
+																				// 체크
+																				// 스트라이크
+																				// 볼
+																				// 체크.
 		}
 	}
-	
-	
-	//소켓 정보를 저장 
+
+	// 소켓 정보를 저장
 	class BManager extends Vector {
 
 		BManager() {
@@ -231,7 +239,7 @@ public class ServerStart {
 			super.remove(sock);
 		}
 
-		synchronized void sendToAll(String msg) { 
+		synchronized void sendToAll(String msg) {
 			PrintWriter writer = null;
 			Socket sock;
 
@@ -249,10 +257,22 @@ public class ServerStart {
 		}
 
 		synchronized void sendClientInfo(Socket sock) {
-			String info = "현재 채팅 인원  : " + size();
-
+			// userInfo();
+			String info = "현재 채팅 인원  : " + size(); // + sock.toString();
 			System.out.println(info);
 			sendToAll(info);
+			userInfo();
 		}
+
+		public void userInfo() {
+			String userInfo = "======= 현재인원 =======\n";
+			for (int i = 0; i < size(); i++) {
+				userInfo += userName[i] + "\n";
+			}
+			System.out.println("저것봐라"+size());
+			bMan.sendToAll(userInfo);
+		}
+
 	}
+
 }

@@ -9,7 +9,7 @@ import javax.swing.JFrame;
 import java.io.*;
 
 public class Client extends JFrame implements Runnable {
-	private String name = "박명우";
+	private String name = "박제언";
 	private TextField nameBox = new TextField(name+"님 환영합니다.");
 
 	private TextArea msgView = new TextArea();
@@ -53,6 +53,10 @@ public class Client extends JFrame implements Runnable {
 
 				if (str.toUpperCase().charAt(0) == '·')
 					nameBox.setText(str);
+				else if(str.toUpperCase().charAt(0) == '/')
+					;
+//				else if(str.toUpperCase().charAt(0) == '=')
+//					;
 				else
 					msgView.append(str + "\n");
 			} catch (IOException ie) {
@@ -69,6 +73,7 @@ public class Client extends JFrame implements Runnable {
 			writer = new PrintWriter(socket.getOutputStream(), true);
 
 			new Thread(this).start();
+			writer.println("/"+name); 
 		} catch (Exception e) {
 			msgView.append("연결 실패..");
 		}
