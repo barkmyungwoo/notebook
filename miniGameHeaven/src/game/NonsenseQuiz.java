@@ -4,9 +4,6 @@ import java.io.*;
 import java.util.Scanner;
 
 public class NonsenseQuiz{
-public static void main(String[] args) {
-	new NonsenseQuiz().start();
-}
 
 	public String[] start() {
 		String fileName = "quiz.dat";

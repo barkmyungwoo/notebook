@@ -12,6 +12,7 @@ public class ServerStart {
 	private BManager bMan = new BManager();
 
 	int gameOn = 0;
+	int gameType = 0;
 	private String question = null;
 	private String answer = null;
 	Game_Thread gt = new Game_Thread();
@@ -63,10 +64,10 @@ public class ServerStart {
 				String msg;
 				while ((msg = reader.readLine()) != null) { 															
 					System.out.println(msg);
+					bMan.sendToAll(msg); 
 					if (gameOn == 1) {
 						answerCheck(msg);
 					}
-					bMan.sendToAll(msg); 
 				}
 			} catch (Exception e) {
 			} finally {
@@ -98,7 +99,7 @@ public class ServerStart {
 
 		public void run() {
 			int gameTerm = 20;	// 게임 REROAD 시간
-			int gameKinds = 2;	// 게임 종류
+			int gameKinds = 3;	// 게임 종류
 			int cnt = 0;		// 정답이 없을때 사용
 
 			do {
@@ -132,25 +133,37 @@ public class ServerStart {
 
 					
 					switch (num) {
-					case 0:
+					case 0:						// 퀴즈 게임
 						String[] str = new game.NonsenseQuiz().start();
 						bMan.sendToAll("·" + str[0]);
 						answer = str[1].trim();
 						gameOn = 1;
+						gameType=0;
 						cnt = 0;
-						break;
-					case 1:
+						break;	
+					case 1:						// 타자 연습 게임
 						String str1 = new game.TypingGame().start();
 						bMan.sendToAll("·" + str1);
 						start = System.currentTimeMillis();
 						answer = str1.trim();
 						gameOn = 1;
+						gameType= 1;
 						cnt = 0;
 						break;
-					case 2:
+					case 2:						// 베이스볼 게임
+						String str2 = new game.BaseBallGame().start();
+						answer = str2.trim();
+						bMan.sendToAll("· 베이스볼 게임. 중복되지 않는 4자리 숫자를 입력 하세요.");						
+						gameOn = 1;
+						gameType = 2;
 						cnt = 0;
 						break;
-					case 3:
+					case 3:						//화살표 게임
+						gameType = 3;
+						cnt = 0;
+						break;
+					case 4:						//레이싱 게임
+						gameType = 4;
 						cnt = 0;
 						break;
 					}
@@ -193,10 +206,13 @@ public class ServerStart {
 			gameOn = 0;
 			end = System.currentTimeMillis();
 			bMan.sendToAll("-------------------- " + str[0] + "님 정답입니다!!! --------------------");
-			if(start!=0)
+			if(gameType==1)
 				bMan.sendToAll("경과 시간 : " +(end - start)/1000+"초 "+(end-start)%1000);
 			start=0;
 			bMan.sendToAll("· 다음 게임을 준비 합니다.");
+		}
+		else if(gameType==2){
+			bMan.sendToAll(new game.BaseBallGame().countSB(answer,str[1]));		// 오답 체크 스트라이크 볼 체크.
 		}
 	}
 	
