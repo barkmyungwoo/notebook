@@ -28,6 +28,7 @@ public class Client extends JFrame implements Runnable {
 	public Client(String title) {
 		super(title);
 		msgView.setEditable(false);
+		
 		// 컨트롤들을 배치한다.
 		add(nameBox, "North");
 		add(msgView, "Center");
@@ -47,18 +48,23 @@ public class Client extends JFrame implements Runnable {
 	}
 
 	public void run() {
+		String str;
 		while (true) {
 			try {
-				String str = reader.readLine();
+				str = reader.readLine();
 
 				if (str.toUpperCase().charAt(0) == '·')
-					nameBox.setText(str);
-				else if(str.toUpperCase().charAt(0) == '/')
+					if(str==null)
+						nameBox.setText("환영합니다.");
+					else
+						nameBox.setText(str);
+				else if(str.toUpperCase().charAt(0) == '1')
 					;
-//				else if(str.toUpperCase().charAt(0) == '=')
-//					;
-				else
+				else if(str.toUpperCase().charAt(0) == '=')
+					;
+				else ;
 					msgView.append(str + "\n");
+
 			} catch (IOException ie) {
 			}
 		}
@@ -73,7 +79,7 @@ public class Client extends JFrame implements Runnable {
 			writer = new PrintWriter(socket.getOutputStream(), true);
 
 			new Thread(this).start();
-			writer.println("/"+name); 
+			writer.println("1"+name); 
 		} catch (Exception e) {
 			msgView.append("연결 실패..");
 		}

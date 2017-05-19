@@ -17,9 +17,12 @@ public class ServerStart {
 	private String answer = null;
 	Game_Thread gt = new Game_Thread();
 	long start = 0, end = 0;
+	// -----------------------------------추가 변수
 	String[] userName = new String[30];
 	String[] tmp = new String[2];
-	int cnt = 0;
+	int count = 0;
+	String msg;
+	String userInfo;
 
 	public ServerStart() {
 	}
@@ -63,18 +66,18 @@ public class ServerStart {
 			try {
 				reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 				writer = new PrintWriter(socket.getOutputStream(), true);
-				String msg;
 				while ((msg = reader.readLine()) != null) {
-					System.out.println(msg);
+					System.out.println("첫번째 " + msg);
+					// ------------------------------------------- 대화명 등록
 
-					if (msg.charAt(0) == '/') {
-						tmp = msg.split("/");
-						userName[cnt] = tmp[1].trim();
-						cnt++;
-						System.out.println("이것봐라." + cnt);
+					if (msg.charAt(0) == '1') {
+						bMan.userInfo();
 					}
 
-					bMan.sendToAll(msg);
+					// -------------------------------------------
+					else
+						bMan.sendToAll(msg);
+
 					if (gameOn == 1) {
 						answerCheck(msg);
 					}
@@ -108,12 +111,13 @@ public class ServerStart {
 
 		public void run() {
 			int gameTerm = 20; // 게임 REROAD 시간
+			int gameTime = 60;
 			int gameKinds = 3; // 게임 종류
 			int cnt = 0; // 정답이 없을때 사용
 
 			do {
 				try {
-					System.out.println("while Check " + cnt);
+					System.out.println("game thread Check : " + cnt);
 					Thread.sleep(1000);
 				} catch (InterruptedException e) {
 					e.printStackTrace();
@@ -146,6 +150,7 @@ public class ServerStart {
 						answer = str[1].trim();
 						gameOn = 1;
 						gameType = 0;
+						gameTime = 60;
 						cnt = 0;
 						break;
 					case 1: // 타자 연습 게임
@@ -155,6 +160,7 @@ public class ServerStart {
 						answer = str1.trim();
 						gameOn = 1;
 						gameType = 1;
+						gameTime = 60;
 						cnt = 0;
 						break;
 					case 2: // 베이스볼 게임
@@ -163,6 +169,7 @@ public class ServerStart {
 						bMan.sendToAll("· 베이스볼 게임. 중복되지 않는 4자리 숫자를 입력 하세요.");
 						gameOn = 1;
 						gameType = 2;
+						gameTime = 60;
 						cnt = 0;
 						break;
 					case 3: // 화살표 게임
@@ -171,6 +178,7 @@ public class ServerStart {
 						break;
 					case 4: // 레이싱 게임
 						gameType = 4;
+						gameTime = 120;
 						cnt = 0;
 						break;
 					}
@@ -182,7 +190,7 @@ public class ServerStart {
 					} catch (InterruptedException e) {
 						e.printStackTrace();
 					}
-					if (cnt == 60) {
+					if (cnt == gameTime) {
 						gameOn = 0;
 						try {
 							bMan.sendToAll("· 정답이 없네요. 다음 게임을 준비 중 입니다.");
@@ -227,6 +235,7 @@ public class ServerStart {
 
 	// 소켓 정보를 저장
 	class BManager extends Vector {
+		String name;
 
 		BManager() {
 		}
@@ -257,19 +266,22 @@ public class ServerStart {
 		}
 
 		synchronized void sendClientInfo(Socket sock) {
-			// userInfo();
 			String info = "현재 채팅 인원  : " + size(); // + sock.toString();
 			System.out.println(info);
 			sendToAll(info);
-			userInfo();
+			// userInfo();
+
 		}
 
 		public void userInfo() {
-			String userInfo = "======= 현재인원 =======\n";
-			for (int i = 0; i < size(); i++) {
+			userName[count] = msg.substring(1);
+			System.out.println("대화명" + userName[count]);
+			count++;
+
+			userInfo = "======= 현재인원 =======\n";
+			for (int i = 0; i < count; i++) {
 				userInfo += userName[i] + "\n";
 			}
-			System.out.println("저것봐라"+size());
 			bMan.sendToAll(userInfo);
 		}
 
