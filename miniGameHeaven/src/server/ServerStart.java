@@ -4,25 +4,16 @@ import java.net.*;
 import java.io.*;
 import java.util.*;
 
-import game.NonsenseQuiz;
-
 public class ServerStart {
 
 	private ServerSocket server;
 	private BManager bMan = new BManager();
 
-	int gameOn = 0;
-	int gameType = 0;
-	private String question = null;
-	private String answer = null;
-	Game_Thread gt = new Game_Thread();
+	int gameOn = 0, gameType = 0;
+	private String question = null, answer = null;
 	long start = 0, end = 0;
-	// -----------------------------------추가 변수
-	String[] userName = new String[30];
-	String[] tmp = new String[2];
-	int count = 0;
-	String msg;
-	String userInfo;
+
+	Game_Thread gt = new Game_Thread();
 
 	public ServerStart() {
 	}
@@ -43,6 +34,7 @@ public class ServerStart {
 			while (true) {
 				Socket socket = server.accept();
 				new Chat_Thread(socket).start();
+
 				bMan.add(socket);
 				bMan.sendClientInfo(socket);
 				System.out.println(bMan);
@@ -55,6 +47,7 @@ public class ServerStart {
 	// 클라이언트와 통신하는 스레드 클래스. (게임 정답 받음. 대화 받음.)
 	class Chat_Thread extends Thread {
 		Socket socket;
+
 		private BufferedReader reader;
 		private PrintWriter writer;
 
@@ -66,20 +59,15 @@ public class ServerStart {
 			try {
 				reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 				writer = new PrintWriter(socket.getOutputStream(), true);
+				String msg;
 				while ((msg = reader.readLine()) != null) {
-					System.out.println("첫번째 " + msg);
-					// ------------------------------------------- 대화명 등록
 
-					if (msg.charAt(0) == '1') {
-						bMan.userInfo();
-					}
+//					if (gameOn == 1) {
+//						new Game_Thread().answerCheck(msg);
+//					}												게임 기능 멈춤. 게임을 켜면 클라이언트 에러가 남.
 
-					// -------------------------------------------
-					else
-						bMan.sendToAll(msg);
-
-					if (gameOn == 1) {
-						answerCheck(msg);
+					if (msg != null) {
+							bMan.sendToAll(msg);
 					}
 				}
 			} catch (Exception e) {
@@ -104,15 +92,14 @@ public class ServerStart {
 		}
 	}
 
-	// 게임 쓰레드. 랜덤으로 게임 발생.
 	class Game_Thread extends Thread {
 		public Game_Thread() {
 		}
 
 		public void run() {
-			int gameTerm = 20; // 게임 REROAD 시간
+			int gameTerm = 10; // 게임 REROAD 시간
 			int gameTime = 60;
-			int gameKinds = 3; // 게임 종류
+			int gameKinds = 4; // 게임 종류
 			int cnt = 0; // 정답이 없을때 사용
 
 			do {
@@ -136,31 +123,30 @@ public class ServerStart {
 							bMan.sendToAll("· 게임" + i + "초전");
 						else if (i < 17)
 							bMan.sendToAll("· 곧 게임이 시작 됩니다.");
-
 						i--;
 					}
 
-					int num = (int) (Math.random() * gameKinds);
+					int num = 3;//(int) (Math.random() * gameKinds);
 					System.out.println("게임 타입" + num);
 
 					switch (num) {
 					case 0: // 퀴즈 게임
 						String[] str = new game.NonsenseQuiz().start();
-						bMan.sendToAll("·" + str[0]);
+						bMan.sendToAll("· 넌센스 퀴즈.<br>"+str[0]);
 						answer = str[1].trim();
 						gameOn = 1;
 						gameType = 0;
-						gameTime = 60;
+						gameTime = 45;
 						cnt = 0;
 						break;
 					case 1: // 타자 연습 게임
 						String str1 = new game.TypingGame().start();
-						bMan.sendToAll("·" + str1);
+						bMan.sendToAll("· 타자 연습 게임 !! 아래 글을 입력하세요.<br>"+ str1);
 						start = System.currentTimeMillis();
 						answer = str1.trim();
 						gameOn = 1;
 						gameType = 1;
-						gameTime = 60;
+						gameTime = 45;
 						cnt = 0;
 						break;
 					case 2: // 베이스볼 게임
@@ -169,16 +155,20 @@ public class ServerStart {
 						bMan.sendToAll("· 베이스볼 게임. 중복되지 않는 4자리 숫자를 입력 하세요.");
 						gameOn = 1;
 						gameType = 2;
-						gameTime = 60;
+						gameTime = 45;
 						cnt = 0;
 						break;
 					case 3: // 화살표 게임
 						gameType = 3;
+						bMan.sendToAll("3");
+						gameOn = 1;
+						gameTime = 20;
 						cnt = 0;
 						break;
 					case 4: // 레이싱 게임
 						gameType = 4;
-						gameTime = 120;
+						gameOn = 1;
+						gameTime = 80;
 						cnt = 0;
 						break;
 					}
@@ -203,35 +193,35 @@ public class ServerStart {
 				}
 			} while (true);
 		}
-	}
+		
+		// 정답 체크
+		private void answerCheck(String msg) {
+			String[] str = new String[2];
+			str = msg.split(":");
+			str[0] = str[0].trim();
+			str[1] = str[1].trim();
 
-	// 정답 체크
-	private void answerCheck(String msg) {
-		String[] str = new String[2];
-		str = msg.split(":");
-		str[0] = str[0].trim();
-		str[1] = str[1].trim();
+			System.out.println(answer);
+			System.out.println(str[0]);
+			System.out.println(str[1]);
 
-		System.out.println(answer);
-		System.out.println(str[0]);
-		System.out.println(str[1]);
-
-		if (str[1].equals(answer)) {
-			gameOn = 0;
-			end = System.currentTimeMillis();
-			bMan.sendToAll("-------------------- " + str[0] + "님 정답입니다!!! --------------------");
-			if (gameType == 1)
-				bMan.sendToAll("경과 시간 : " + (end - start) / 1000 + "초 " + (end - start) % 1000);
-			start = 0;
-			bMan.sendToAll("· 다음 게임을 준비 합니다.");
-		} else if (gameType == 2) {
-			bMan.sendToAll(new game.BaseBallGame().countSB(answer, str[1])); // 오답
-																				// 체크
-																				// 스트라이크
-																				// 볼
-																				// 체크.
+			if (str[1].equals(answer)) {
+				gameOn = 0;
+				end = System.currentTimeMillis();
+				bMan.sendToAll("====================== " + str[0] + "님 정답입니다!!! ======================");
+				if (gameType == 1)
+					bMan.sendToAll("경과 시간 : " + (end - start) / 1000 + "초 " + (end - start) % 1000);
+				bMan.sendToAll("· 다음 게임을 준비 합니다.");
+			} else if (gameType == 2) {
+				if (answer.length() == str[1].length())
+					bMan.sendToAll(new game.BaseBallGame().countSB(answer, str[1]));
+			} else
+				;
 		}
 	}
+
+
+
 
 	// 소켓 정보를 저장
 	class BManager extends Vector {
@@ -267,24 +257,8 @@ public class ServerStart {
 
 		synchronized void sendClientInfo(Socket sock) {
 			String info = "현재 채팅 인원  : " + size(); // + sock.toString();
-			System.out.println(info);
 			sendToAll(info);
-			// userInfo();
-
+			bMan.sendToAll("/");				//이거 잘 쓰면 잼있을 듯.
 		}
-
-		public void userInfo() {
-			userName[count] = msg.substring(1);
-			System.out.println("대화명" + userName[count]);
-			count++;
-
-			userInfo = "======= 현재인원 =======\n";
-			for (int i = 0; i < count; i++) {
-				userInfo += userName[i] + "\n";
-			}
-			bMan.sendToAll(userInfo);
-		}
-
 	}
-
 }

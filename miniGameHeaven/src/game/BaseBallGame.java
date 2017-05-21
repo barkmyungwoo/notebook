@@ -24,17 +24,8 @@ public class BaseBallGame {
 		return "" + baseNumber[0] + baseNumber[1] + baseNumber[2] + baseNumber[3];
 	}
 
-	// public void inputUserNumber1(String in1) {
-	//
-	// String in = in1;
-	// for (int i = 0; i < userNumber.length; i++) {
-	// userNumber[i] = in.charAt(i) - 48;
-	// }
-	// countSB(baseNumber, userNumber);
-	//
-	// }
-
 	public String countSB(String answer, String msg) {
+
 		int[] a = new int[4];
 		int[] b = new int[4];
 
