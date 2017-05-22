@@ -8,8 +8,10 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.ScrollPaneConstants;
 
 import java.io.*;
 
@@ -58,7 +60,11 @@ public class ClientHitEdit extends JFrame implements Runnable {
 		// --------------------------------------------------------------- 남쪽 얼굴
 
 		msgView = new JTextArea(19, 60);
-
+		msgView.setEditable ( false );
+		
+	    JScrollPane scroll = new JScrollPane ( msgView );
+	    scroll.setVerticalScrollBarPolicy ( ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS );
+		
 		center = new JPanel();
 		center.add(new JLabel("주고받은 메세지 출력창"));
 		center.add(msgView);
@@ -119,7 +125,9 @@ public class ClientHitEdit extends JFrame implements Runnable {
 					else if (str.charAt(0) == '-')
 						userList.append(str + "\n");
 					else if (str.equals("3")) {
-						numberGame();
+							new Numbers();
+					}else if (str.equals("4")) {
+						System.out.println(new MoleGame().scoreNum);
 					} else if (str.charAt(0) == '3') {
 						;
 					} else

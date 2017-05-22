@@ -133,7 +133,7 @@ public class ServerStart {
 						i--;
 					}
 
-					int num = 0;//(int) (Math.random() * gameKinds);
+					int num = (int) (Math.random() * gameKinds);
 					System.out.println("게임 타입" + num);
 
 					switch (num) {
@@ -174,8 +174,9 @@ public class ServerStart {
 						break;
 					case 4: // 레이싱 게임
 						gameType = 4;
+						bMan.sendToAll("4");
 						gameOn = 1;
-						gameTime = 80;
+						gameTime = 30;
 						cnt = 0;
 						break;
 					}
@@ -202,6 +203,7 @@ public class ServerStart {
 
 	}
 
+	// 정답 체크
 	class answerCheck extends Thread {
 		public void run(){
 			
@@ -236,9 +238,7 @@ public class ServerStart {
 				} 
 		}
 	}
-	
-	
-	// 정답 체크
+
 
 	// 소켓 정보를 저장
 	class BManager extends Vector {
