@@ -14,7 +14,7 @@ import javax.swing.JTextField;
 import java.io.*;
 
 public class ClientHitEdit extends JFrame implements Runnable {
-	private String name = "¾ç¾ÆÄ¡ »õ³¢";
+	private String name = "¸Ûdd";
 
 	// GUI¿ë ¼±¾ð
 	private JLabel nameBox;
