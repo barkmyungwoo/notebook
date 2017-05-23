@@ -67,7 +67,6 @@ public class ServerStart {
 					
 					if(msg.charAt(0) !='-'){
 						if (gameOn == 1) {
-							System.out.println("test Ac1");
 							gameMsg = msg;
 							ac.check();
 						}
@@ -233,7 +232,6 @@ public class ServerStart {
 							bMan.sendToAll(new game.BaseBallGame().countSB(answer, str[1]));
 					} else
 						;
-
 					gameMsg=null;					
 				} 
 		}

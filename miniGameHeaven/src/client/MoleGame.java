@@ -68,47 +68,47 @@ public class MoleGame extends JFrame {
 					
 					switch(r.nextInt(10)){
 					case 1:
-						h1.setIcon(new ImageIcon("up.gif"));
+						h1.setIcon(new ImageIcon("src/client/img/up.gif"));
 						on1 = 1;
 						hit(h1, 1);
 						break;
 					case 2:
-						h2.setIcon(new ImageIcon("up.gif"));
+						h2.setIcon(new ImageIcon("src/client/img/up.gif"));
 						on2 = 1;
 						hit(h2, 2);
 						break;
 					case 3:
-						h3.setIcon(new ImageIcon("up.gif"));
+						h3.setIcon(new ImageIcon("src/client/img/up.gif"));
 						on3 = 1;
 						hit(h3, 3);
 						break;
 					case 4:
-						h4.setIcon(new ImageIcon("up.gif"));
+						h4.setIcon(new ImageIcon("src/client/img/up.gif"));
 						on4 = 1;
 						hit(h4, 4);
 						break;
 					case 5:
-						h5.setIcon(new ImageIcon("up.gif"));
+						h5.setIcon(new ImageIcon("src/client/img/up.gif"));
 						on5 = 1;
 						hit(h5, 5);
 						break;
 					case 6:
-						h6.setIcon(new ImageIcon("up.gif"));
+						h6.setIcon(new ImageIcon("src/client/img/up.gif"));
 						on6 = 1;
 						hit(h6, 6);
 						break;
 					case 7:
-						h7.setIcon(new ImageIcon("up.gif"));
+						h7.setIcon(new ImageIcon("src/client/img/up.gif"));
 						on7 = 1;
 						hit(h7, 7);
 						break;
 					case 8:
-						h8.setIcon(new ImageIcon("up.gif"));
+						h8.setIcon(new ImageIcon("src/client/img/up.gif"));
 						on8 = 1;
 						hit(h8, 8);
 						break;
 					case 9:
-						h9.setIcon(new ImageIcon("up.gif"));
+						h9.setIcon(new ImageIcon("src/client/img/up.gif"));
 						on9 = 1;
 						hit(h9, 9);
 						break;
@@ -125,7 +125,7 @@ public class MoleGame extends JFrame {
 	public void hit(JLabel h, int on){		//두더지 내려가는 메소드
 		try {
 			Thread.sleep(700);
-			h.setIcon(new ImageIcon("hole.gif"));
+			h.setIcon(new ImageIcon("src/client/img/hole.gif"));
 			switch(on){
 			case 1:	
 				on1 = 0;
@@ -170,39 +170,39 @@ public class MoleGame extends JFrame {
 					
 					Thread.sleep(1800);
 					if(on1 == 1){
-						h1.setIcon(new ImageIcon("hole.gif"));
+						h1.setIcon(new ImageIcon("src/client/img/hole.gif"));
 						on1 = 0;
 					}
 					if(on2 == 1){
-						h2.setIcon(new ImageIcon("hole.gif"));
+						h2.setIcon(new ImageIcon("src/client/img/hole.gif"));
 						on2 = 0;
 					}
 					if(on3 == 1){
-						h3.setIcon(new ImageIcon("hole.gif"));
+						h3.setIcon(new ImageIcon("src/client/img/hole.gif"));
 						on3 = 0;
 					}
 					if(on4 == 1){
-						h4.setIcon(new ImageIcon("hole.gif"));
+						h4.setIcon(new ImageIcon("src/client/img/hole.gif"));
 						on4 = 0;
 					}
 					if(on5 == 1){
-						h5.setIcon(new ImageIcon("hole.gif"));
+						h5.setIcon(new ImageIcon("src/client/img/hole.gif"));
 						on5 = 0;
 					}
 					if(on6 == 1){
-						h6.setIcon(new ImageIcon("hole.gif"));
+						h6.setIcon(new ImageIcon("src/client/img/hole.gif"));
 						on6 = 0;
 					}
 					if(on7 == 1){
-						h7.setIcon(new ImageIcon("hole.gif"));
+						h7.setIcon(new ImageIcon("src/client/img/hole.gif"));
 						on7 = 0;
 					}
 					if(on8 == 1){
-						h8.setIcon(new ImageIcon("hole.gif"));
+						h8.setIcon(new ImageIcon("src/client/img/hole.gif"));
 						on8 = 0;
 					}
 					if(on9 == 1){
-						h9.setIcon(new ImageIcon("hole.gif"));
+						h9.setIcon(new ImageIcon("src/client/img/hole.gif"));
 						on9 = 0;
 					}
 
@@ -240,7 +240,7 @@ public class MoleGame extends JFrame {
 		    {  
 		    	if(on1 == 1){
 		    		scoreNum += 100;
-			    	h1.setIcon(new ImageIcon("hit.gif"));
+			    	h1.setIcon(new ImageIcon("src/client/img/hit.gif"));
 		    	}
 		    	on1 = 0;
 		    }  
@@ -251,7 +251,7 @@ public class MoleGame extends JFrame {
 		    {  
 		    	if(on2 == 1){
 		    		scoreNum += 100;
-		    		h2.setIcon(new ImageIcon("hit.gif"));
+		    		h2.setIcon(new ImageIcon("src/client/img/hit.gif"));
 		    	}
 		    	on2 = 0;
 		    }  
@@ -262,7 +262,7 @@ public class MoleGame extends JFrame {
 		    {  
 		    	if(on3 == 1){
 		    		scoreNum += 100;
-		    		h3.setIcon(new ImageIcon("hit.gif"));
+		    		h3.setIcon(new ImageIcon("src/client/img/hit.gif"));
 		    	}
 		    	on3 = 0;
 		    }  
@@ -273,7 +273,7 @@ public class MoleGame extends JFrame {
 		    {  
 		    	if(on4 == 1){
 		    		scoreNum += 100;
-		    		h4.setIcon(new ImageIcon("hit.gif"));
+		    		h4.setIcon(new ImageIcon("src/client/img/hit.gif"));
 		    	}
 		    	on4 = 0;
 		    }  
@@ -284,7 +284,7 @@ public class MoleGame extends JFrame {
 		    {  
 		    	if(on5 == 1){
 		    		scoreNum += 100;
-		    		h5.setIcon(new ImageIcon("hit.gif"));
+		    		h5.setIcon(new ImageIcon("src/client/img/hit.gif"));
 		    	}
 		    	on5 = 0;
 		    }  
@@ -295,7 +295,7 @@ public class MoleGame extends JFrame {
 		    {  
 		    	if(on6 == 1){
 		    		scoreNum += 100;
-		    		h6.setIcon(new ImageIcon("hit.gif"));
+		    		h6.setIcon(new ImageIcon("src/client/img/hit.gif"));
 		    	}
 		    	on6 = 0;
 		    }  
@@ -306,7 +306,7 @@ public class MoleGame extends JFrame {
 		    {  
 		    	if(on7 == 1){
 		    		scoreNum += 100;
-		    		h7.setIcon(new ImageIcon("hit.gif"));
+		    		h7.setIcon(new ImageIcon("src/client/img/hit.gif"));
 		    	}
 		    	on7 = 0;
 		    }  
@@ -317,7 +317,7 @@ public class MoleGame extends JFrame {
 		    {  
 		    	if(on8 == 1){
 		    		scoreNum += 100;
-		    		h8.setIcon(new ImageIcon("hit.gif"));
+		    		h8.setIcon(new ImageIcon("src/client/img/hit.gif"));
 		    	}
 		    	on8 = 0;
 		    }  
@@ -328,7 +328,7 @@ public class MoleGame extends JFrame {
 		    {  
 		    	if(on9 == 1){
 		    		scoreNum += 100;
-		    		h9.setIcon(new ImageIcon("hit.gif"));
+		    		h9.setIcon(new ImageIcon("src/client/img/hit.gif"));
 		    	}
 		    	on9 = 0;
 		    }  
@@ -340,23 +340,23 @@ public class MoleGame extends JFrame {
 		setLayout(new GridLayout(4, 3));
 		
 		h1 = new JLabel();
-		h1.setIcon(new ImageIcon("hole.gif"));
+		h1.setIcon(new ImageIcon("src/client/img/hole.gif"));
 		h2 = new JLabel();
-		h2.setIcon(new ImageIcon("hole.gif"));
+		h2.setIcon(new ImageIcon("src/client/img/hole.gif"));
 		h3 = new JLabel();
-		h3.setIcon(new ImageIcon("hole.gif"));
+		h3.setIcon(new ImageIcon("src/client/img/hole.gif"));
 		h4 = new JLabel();
-		h4.setIcon(new ImageIcon("hole.gif"));
+		h4.setIcon(new ImageIcon("src/client/img/hole.gif"));
 		h5 = new JLabel();
-		h5.setIcon(new ImageIcon("hole.gif"));
+		h5.setIcon(new ImageIcon("src/client/img/hole.gif"));
 		h6 = new JLabel();
-		h6.setIcon(new ImageIcon("hole.gif"));
+		h6.setIcon(new ImageIcon("src/client/img/hole.gif"));
 		h7 = new JLabel();
-		h7.setIcon(new ImageIcon("hole.gif"));
+		h7.setIcon(new ImageIcon("src/client/img/hole.gif"));
 		h8 = new JLabel();
-		h8.setIcon(new ImageIcon("hole.gif"));
+		h8.setIcon(new ImageIcon("src/client/img/hole.gif"));
 		h9 = new JLabel();
-		h9.setIcon(new ImageIcon("hole.gif"));
+		h9.setIcon(new ImageIcon("src/client/img/hole.gif"));
 		
 		time = new JTextField();
 		score = new JTextField();

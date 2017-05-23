@@ -24,7 +24,7 @@ public class ClientHitEdit extends JFrame implements Runnable {
 	private JTextArea msgView, userList;
 	private JButton send;
 	private JPanel north, south, west, center;
-
+	private JScrollPane scroll;
 	// 통신용 선언
 	private BufferedReader reader;
 	private PrintWriter writer;
@@ -34,13 +34,13 @@ public class ClientHitEdit extends JFrame implements Runnable {
 	private int gameType = 0;
 
 	public ClientHitEdit(String title) {
-		// super(title);
+		super(title);
 
 		this.setTitle("미니게임 천국");
-		this.setBounds(new Rectangle(100, 100, 870, 500));
+		this.setBounds(new Rectangle(100, 100, 890, 530));
 		this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 
-		nameBox = new JLabel(name + "님 환영해요.");
+		nameBox = new JLabel("<html><br>" + name + "님 환영해요.<br><br><br></html>");
 		north = new JPanel();
 		north.add(nameBox);
 
@@ -60,14 +60,13 @@ public class ClientHitEdit extends JFrame implements Runnable {
 		// --------------------------------------------------------------- 남쪽 얼굴
 
 		msgView = new JTextArea(19, 60);
-		msgView.setEditable ( false );
-		
-	    JScrollPane scroll = new JScrollPane ( msgView );
-	    scroll.setVerticalScrollBarPolicy ( ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS );
-		
+		msgView.setEditable(false);
+		scroll = new JScrollPane(msgView);
+		scroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+
 		center = new JPanel();
-		center.add(new JLabel("주고받은 메세지 출력창"));
-		center.add(msgView);
+		center.add(new JLabel("- Message -"));
+		center.add(scroll);
 
 		this.add(center, BorderLayout.CENTER);
 
@@ -76,7 +75,7 @@ public class ClientHitEdit extends JFrame implements Runnable {
 		userList = new JTextArea(19, 15);
 
 		west = new JPanel();
-		west.add(new JLabel("유저 목록"));
+		west.add(new JLabel("- User -"));
 		west.add(userList);
 		west.setPreferredSize(new Dimension(180, 400));
 		this.add(west, BorderLayout.WEST);
@@ -117,7 +116,10 @@ public class ClientHitEdit extends JFrame implements Runnable {
 				String str = reader.readLine();
 				if (str != null) {
 					if (str.charAt(0) == '·') {
-						nameBox.setText("<html><center><br>" + str.replaceAll("·", "") + "<br><br><center></html>");
+						if(str.contains("<br>"))
+							nameBox.setText("<html><center><br>" + str.replaceAll("·", "") + "<br><center></html>");
+						else
+							nameBox.setText("<html><center><br>" + str.replaceAll("·", "") + "<br><br><center></html>");
 					} else if (str.charAt(0) == '/')
 						writer.println("-" + name + socket.getInetAddress());
 					else if (str.charAt(0) == '현')
@@ -145,7 +147,7 @@ public class ClientHitEdit extends JFrame implements Runnable {
 		String question;
 		for (int i = 0; i < howTo.length; i++) {
 			try {
-				nameBox.setText("<html><center><br>"+howTo[i]+"<br></center></html>");
+				nameBox.setText("<html><center><br>" + howTo[i] + "<br></center></html>");
 				Thread.sleep(3000);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
@@ -157,16 +159,15 @@ public class ClientHitEdit extends JFrame implements Runnable {
 			System.out.println(question);
 			String[] direct = question.replaceAll("null", "").split(" ");
 
-
 			try {
-				nameBox.setText("<html><center><br>"+count + "단계 문제.<br></center></html>");
+				nameBox.setText("<html><center><br>" + count + "단계 문제.<br></center></html>");
 				Thread.sleep(2000);
 			} catch (InterruptedException e1) {
 				e1.printStackTrace();
 			}
 
 			for (int j = 0; j < count; j++) {
-				nameBox.setText("<html><center><br>"+direct[j]+"<br></center></html>");
+				nameBox.setText("<html><center><br>" + direct[j] + "<br></center></html>");
 				try {
 					Thread.sleep(1000);
 					nameBox.setText("<html><center><br> <br></center></html>");
@@ -176,7 +177,7 @@ public class ClientHitEdit extends JFrame implements Runnable {
 				}
 			}
 
-			nameBox.setText("<html><center><br>입력하세요!"+"<br></center></html>");
+			nameBox.setText("<html><center><br>입력하세요!" + "<br></center></html>");
 
 			if (ng.answerCheck(sendBox.getText()))
 				count++;
