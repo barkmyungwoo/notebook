@@ -132,7 +132,7 @@ public class ServerStart {
 						i--;
 					}
 
-					int num = (int) (Math.random() * gameKinds);
+					int num = 4;//(int) (Math.random() * gameKinds);
 					System.out.println("게임 타입" + num);
 
 					switch (num) {
@@ -219,7 +219,8 @@ public class ServerStart {
 					System.out.println(answer);
 					System.out.println(str[0]);
 					System.out.println(str[1]);
-
+					if(gameType==3&&gameType==4)
+						return;
 					if (str[1].equals(answer)) {
 						gameOn = 0;
 						end = System.currentTimeMillis();

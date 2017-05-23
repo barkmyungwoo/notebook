@@ -16,6 +16,8 @@ import javax.swing.ScrollPaneConstants;
 import java.io.*;
 
 public class ClientHitEdit extends JFrame implements Runnable {
+	SaveScore score = new SaveScore();
+
 	private String name = "멍dd";
 
 	// GUI용 선언
@@ -116,7 +118,7 @@ public class ClientHitEdit extends JFrame implements Runnable {
 				String str = reader.readLine();
 				if (str != null) {
 					if (str.charAt(0) == '·') {
-						if(str.contains("<br>"))
+						if (str.contains("<br>"))
 							nameBox.setText("<html><center><br>" + str.replaceAll("·", "") + "<br><center></html>");
 						else
 							nameBox.setText("<html><center><br>" + str.replaceAll("·", "") + "<br><br><center></html>");
@@ -127,9 +129,11 @@ public class ClientHitEdit extends JFrame implements Runnable {
 					else if (str.charAt(0) == '-')
 						userList.append(str + "\n");
 					else if (str.equals("3")) {
-							new Numbers();
-					}else if (str.equals("4")) {
-						System.out.println(new MoleGame().scoreNum);
+						nameBox.setText("<html><center><br>리멤버 다이렉트<br><br><center></html>");
+						new Numbers();
+					} else if (str.equals("4")) {
+						nameBox.setText("<html><center><br>두더지 게임!!!<br><br><center></html>");
+						new MoleGame(writer, name);
 					} else if (str.charAt(0) == '3') {
 						;
 					} else
