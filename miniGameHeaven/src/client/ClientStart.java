@@ -32,7 +32,7 @@ public class ClientStart {
 		nicframe.setBounds(x, y, 300, 150);
 		nicframe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		nicframe.getContentPane().setLayout(null);
-
+		nicframe.setResizable(false);
 		JLabel lblNewLabel = new JLabel("대화명을 입력해 주세요");
 		lblNewLabel.setBounds(80, 10, 140, 15);
 		nicframe.getContentPane().add(lblNewLabel);

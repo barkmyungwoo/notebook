@@ -4,6 +4,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.net.*;
 import javax.swing.*;
+
 import java.io.*;
 
 public class mainFrame extends JFrame implements Runnable {
@@ -31,7 +32,7 @@ public class mainFrame extends JFrame implements Runnable {
 		this.name = name;
 		this.setBounds(new Rectangle(100, 100, 890, 530));
 		this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-
+		this.setResizable(false);
 		nameBox = new JLabel("<html><br>" + name + "님 환영해요.<br><br><br></html>");
 		north = new JPanel();
 		north.add(nameBox);
@@ -107,27 +108,31 @@ public class mainFrame extends JFrame implements Runnable {
 			try {
 				String str = reader.readLine();
 				if (str != null) {
-					if (str.charAt(0) == '·') {						//게임 창. 명령어
+					if (str.charAt(0) == '·') { // 게임 창. 명령어
 						if (str.contains("<br>"))
 							nameBox.setText("<html><center><br>" + str.replaceAll("·", "") + "<br><center></html>");
 						else
 							nameBox.setText("<html><center><br>" + str.replaceAll("·", "") + "<br><br><center></html>");
-					} 
-					
-					
-					else if (str.charAt(0) == '/')					//유저리스트 리셋 실행 명령어.
+					}
+
+					else if (str.charAt(0) == '/') // 유저리스트 리셋 실행 명령어.
 						writer.println("-" + name + socket.getInetAddress());
-					else if (str.charAt(0) == '현')					//유저 리스트 리셋 명령어
+					else if (str.charAt(0) == '현') // 유저 리스트 리셋 명령어
 						userList.setText(str + "\n");
-					else if (str.charAt(0) == '-')					//유저 리스트 입력 명령어
+					else if (str.charAt(0) == '-') // 유저 리스트 입력 명령어
 						userList.append(str + "\n");
 
-					
-					else if (str.charAt(0) == '@')					//게임 정보 출력 명령어
+					else if (str.charAt(0) == '@') // 게임 정보 출력 명령어
 						;
-					else if (str.equals("3")) {						//클라이 언트 측 게임 실행 명령어
-						nameBox.setText("<html><center><br>리멤버 다이렉트<br><br><center></html>");
-						new MemoryGame();
+					else if (str.equals("3")) { // 클라이 언트 측 게임 실행 명령어
+						nameBox.setText("<html><center><br>방향 기억하기 게임<br><br><center></html>");
+						try {
+							UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");
+							new ArrowGame(writer, name);
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+
 					} else if (str.equals("4")) {
 						nameBox.setText("<html><center><br>두더지 게임!!!<br><br><center></html>");
 						new MoleGame(writer, name);

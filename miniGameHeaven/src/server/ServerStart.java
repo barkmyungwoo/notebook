@@ -120,7 +120,7 @@ public class ServerStart {
 		public void run() {
 			int gameTerm = 10; // 게임 REROAD 시간
 			int gameTime = 60;
-			int gameKinds = 3; // 게임 종류
+			int gameKinds = 5; // 게임 종류
 			int cnt = 0; // 정답이 없을때 사용
 
 			do {
@@ -181,7 +181,7 @@ public class ServerStart {
 						break;
 					case 3: // 화살표 게임
 						gameType = 3;
-//						bMan.sendToAll("3");
+						bMan.sendToAll("3");
 						gameOn = 1;
 						gameTime = 20;
 						cnt = 0;

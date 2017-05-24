@@ -35,6 +35,7 @@ public class MoleGame extends JFrame {
 		this.init(); // 화면구성 메소드
 		this.setSize(218, 282); // 크기
 		this.hole(); // 두더지 클릭메소드
+		this.setResizable(false);
 
 		(new TimeThread()).start();
 		(new MoleUp()).start();
