@@ -38,9 +38,11 @@ public class ArrowGame extends JFrame {
 		this.frame();
 		new ArrowGen().start();
 	}
+	
+	
 
-	class ArrowGen {
-		public void start() {
+	class ArrowGen extends Thread{
+		public void run() {
 			click();
 			do {
 				question();
@@ -51,6 +53,7 @@ public class ArrowGame extends JFrame {
 			} while (true);
 			
 			dispose();
+			
 		}
 
 		public void question() {

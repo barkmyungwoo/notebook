@@ -118,7 +118,7 @@ public class ServerStart {
 		}
 
 		public void run() {
-			int gameTerm = 10; // 게임 REROAD 시간
+			int gameTerm = 30; // 게임 REROAD 시간
 			int gameTime = 60;
 			int gameKinds = 5; // 게임 종류
 			int cnt = 0; // 정답이 없을때 사용
@@ -167,7 +167,7 @@ public class ServerStart {
 						answer = str1.trim();
 						gameOn = 1;
 						gameType = 1;
-						gameTime = 45;
+						gameTime = 20;
 						cnt = 0;
 						break;
 					case 2: // 베이스볼 게임
@@ -183,14 +183,14 @@ public class ServerStart {
 						gameType = 3;
 						bMan.sendToAll("3");
 						gameOn = 1;
-						gameTime = 20;
+						gameTime = 22;
 						cnt = 0;
 						break;
 					case 4: // 두더지 게임
 						gameType = 4;
 						bMan.sendToAll("4");
 						gameOn = 1;
-						gameTime = 16;
+						gameTime = 100;
 						cnt = 0;
 						break;
 					}
@@ -315,7 +315,7 @@ public class ServerStart {
 		}
 
 		synchronized void sendClientInfo(Socket sock) {
-			String info = "현재 채팅 인원  : " + size(); // + sock.toString();
+			String info = " 현재 채팅 인원  : " + size(); // + sock.toString();
 			user=size();
 			users = new String[user];
 			sendToAll(info);

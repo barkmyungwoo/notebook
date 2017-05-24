@@ -69,7 +69,7 @@ public class MoleGame extends JFrame {
 
 					if (timeNum == 0) { // 시간종료시 쓰레드종료와 동시에 타임오버 창표시
 						writer.println("@"+name+":"+scoreNum);
-						JOptionPane.showMessageDialog(time, "T i m e O v e r\n" + "점수는 " + scoreNum + "점 입니다.");
+//						JOptionPane.showMessageDialog(time, "T i m e O v e r\n" + "점수는 " + scoreNum + "점 입니다.");
 						break;
 					}
 				} catch (InterruptedException e) {
