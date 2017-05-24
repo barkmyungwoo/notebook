@@ -61,7 +61,7 @@ public class ClientStart {
 				}
 			}
 		});
-		
+
 		textField.setBounds(80, 40, 140, 21);
 		nicframe.getContentPane().add(textField);
 		textField.setColumns(10);
