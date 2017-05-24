@@ -14,6 +14,11 @@ public class ServerStart {
 	long start = 0, end = 0;
 	String gameMsg;
 
+	int user, winScore = 0, usercount=0;
+
+	String winnerName;
+	String[] users;
+
 	Game_Thread gt = new Game_Thread();
 	answerCheck ac = new answerCheck();
 
@@ -64,14 +69,24 @@ public class ServerStart {
 				writer = new PrintWriter(socket.getOutputStream(), true);
 				String msg;
 				while ((msg = reader.readLine()) != null) {
-					
-					if(msg.charAt(0) !='-'){
+
+					if (msg.charAt(0) != '-') {
 						if (gameOn == 1) {
 							gameMsg = msg;
 							ac.check();
 						}
 					}
 					
+					if(msg.charAt(0) == '-'){
+						String[] tmp = new String[2];
+						tmp = msg.replaceAll("-","").split("/");
+						tmp[0] = tmp[0].trim();
+						tmp[1] = tmp[1].trim();
+						users[usercount] = tmp[usercount];
+						System.out.println(usercount+" : "+users[usercount]);
+						usercount++;
+					}
+
 					if (msg != null) {
 						bMan.sendToAll(msg);
 					}
@@ -132,7 +147,7 @@ public class ServerStart {
 						i--;
 					}
 
-					int num = 4;//(int) (Math.random() * gameKinds);
+					int num = (int) (Math.random() * gameKinds);
 					System.out.println("게임 타입" + num);
 
 					switch (num) {
@@ -166,16 +181,16 @@ public class ServerStart {
 						break;
 					case 3: // 화살표 게임
 						gameType = 3;
-						bMan.sendToAll("3");
+//						bMan.sendToAll("3");
 						gameOn = 1;
 						gameTime = 20;
 						cnt = 0;
 						break;
-					case 4: // 레이싱 게임
+					case 4: // 두더지 게임
 						gameType = 4;
 						bMan.sendToAll("4");
 						gameOn = 1;
-						gameTime = 30;
+						gameTime = 16;
 						cnt = 0;
 						break;
 					}
@@ -187,12 +202,22 @@ public class ServerStart {
 						e.printStackTrace();
 					}
 					if (cnt == gameTime) {
-						gameOn = 0;
-						try {
-							bMan.sendToAll("· 정답이 없네요. 다음 게임을 준비 중 입니다.");
-							Thread.sleep(2000);
-						} catch (InterruptedException e) {
-							e.printStackTrace();
+						if (gameType == 3 || gameType == 4) {
+							gameOn = 0;
+							try {
+								bMan.sendToAll("====================== 승자는" + winnerName + "입니다. ======================");
+								Thread.sleep(2000);
+							} catch (InterruptedException e) {
+								e.printStackTrace();
+							}
+						} else {
+							gameOn = 0;
+							try {
+								bMan.sendToAll("· 정답이 없네요. 다음 게임을 준비 중 입니다.");
+								Thread.sleep(2000);
+							} catch (InterruptedException e) {
+								e.printStackTrace();
+							}
 						}
 						cnt = 0;
 					}
@@ -204,14 +229,34 @@ public class ServerStart {
 
 	// 정답 체크
 	class answerCheck extends Thread {
-		public void run(){
-			
+		public void run() {
 		}
-		public void check(){
+
+		public void check() {
 			System.out.println(gameMsg);
-				if (gameMsg != null) {
-					System.out.println("test AC ");
-					String[] str = new String[2];
+			if (gameMsg != null) {
+				System.out.println("test AC ");
+				String[] str = new String[2];
+
+				if (gameMsg.charAt(0) == '@') {
+					str = gameMsg.replaceAll("@", "").split(":");
+					str[0] = str[0].trim();
+					str[1] = str[1].trim();
+					
+					System.out.println(str[0]);
+					System.out.println(str[1]);
+
+					if (Integer.parseInt(str[1]) > winScore) {
+						winnerName = str[0];
+					} else if (Integer.parseInt(str[1]) == winScore) {
+						winnerName += (", " + str[0]);
+					}
+					
+					System.out.println(winScore);
+					System.out.println(winnerName);
+					
+				}
+				else {
 					str = gameMsg.split(":");
 					str[0] = str[0].trim();
 					str[1] = str[1].trim();
@@ -219,8 +264,7 @@ public class ServerStart {
 					System.out.println(answer);
 					System.out.println(str[0]);
 					System.out.println(str[1]);
-					if(gameType==3&&gameType==4)
-						return;
+
 					if (str[1].equals(answer)) {
 						gameOn = 0;
 						end = System.currentTimeMillis();
@@ -231,13 +275,12 @@ public class ServerStart {
 					} else if (gameType == 2) {
 						if (answer.length() == str[1].length())
 							bMan.sendToAll(new game.BaseBallGame().countSB(answer, str[1]));
-					} else
-						;
-					gameMsg=null;					
-				} 
+					}
+				}
+				gameMsg = null;
+			}
 		}
 	}
-
 
 	// 소켓 정보를 저장
 	class BManager extends Vector {
@@ -273,7 +316,10 @@ public class ServerStart {
 
 		synchronized void sendClientInfo(Socket sock) {
 			String info = "현재 채팅 인원  : " + size(); // + sock.toString();
+			user=size();
+			users = new String[user];
 			sendToAll(info);
+			usercount=0;
 			bMan.sendToAll("/"); // 이거 잘 쓰면 잼있을 듯.
 		}
 	}

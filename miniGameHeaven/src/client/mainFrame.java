@@ -3,22 +3,11 @@ package client;
 import java.awt.*;
 import java.awt.event.*;
 import java.net.*;
-
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
-import javax.swing.JTextField;
-import javax.swing.ScrollPaneConstants;
-
+import javax.swing.*;
 import java.io.*;
 
-public class ClientHitEdit extends JFrame implements Runnable {
-	SaveScore score = new SaveScore();
-
-	private String name = "멍dd";
+public class mainFrame extends JFrame implements Runnable {
+	private String name;
 
 	// GUI용 선언
 	private JLabel nameBox;
@@ -27,18 +16,19 @@ public class ClientHitEdit extends JFrame implements Runnable {
 	private JButton send;
 	private JPanel north, south, west, center;
 	private JScrollPane scroll;
+
 	// 통신용 선언
 	private BufferedReader reader;
 	private PrintWriter writer;
 	private Socket socket;
 
 	private int gameOn = 0;
-	private int gameType = 0;
 
-	public ClientHitEdit(String title) {
+	public mainFrame(String title, String name) {
 		super(title);
 
 		this.setTitle("미니게임 천국");
+		this.name = name;
 		this.setBounds(new Rectangle(100, 100, 890, 530));
 		this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 
@@ -50,10 +40,10 @@ public class ClientHitEdit extends JFrame implements Runnable {
 		// -------------------------------------------------------------- 북쪽 얼굴
 
 		sendBox = new JTextField(50);
-		send = new JButton("전송");
+		send = new JButton("입 력");
 
 		south = new JPanel();
-		south.add(new JLabel("전송할 메세지 : "));
+		south.add(new JLabel("전송창 : "));
 		south.add(sendBox);
 		south.add(send);
 
@@ -67,7 +57,7 @@ public class ClientHitEdit extends JFrame implements Runnable {
 		scroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 
 		center = new JPanel();
-		center.add(new JLabel("- Message -"));
+		center.add(new JLabel("- 채 팅 화 면 -"));
 		center.add(scroll);
 
 		this.add(center, BorderLayout.CENTER);
@@ -77,7 +67,7 @@ public class ClientHitEdit extends JFrame implements Runnable {
 		userList = new JTextArea(19, 15);
 
 		west = new JPanel();
-		west.add(new JLabel("- User -"));
+		west.add(new JLabel("- 접속자 -"));
 		west.add(userList);
 		west.setPreferredSize(new Dimension(180, 400));
 		this.add(west, BorderLayout.WEST);
@@ -117,25 +107,30 @@ public class ClientHitEdit extends JFrame implements Runnable {
 			try {
 				String str = reader.readLine();
 				if (str != null) {
-					if (str.charAt(0) == '·') {
+					if (str.charAt(0) == '·') {						//게임 창. 명령어
 						if (str.contains("<br>"))
 							nameBox.setText("<html><center><br>" + str.replaceAll("·", "") + "<br><center></html>");
 						else
 							nameBox.setText("<html><center><br>" + str.replaceAll("·", "") + "<br><br><center></html>");
-					} else if (str.charAt(0) == '/')
+					} 
+					
+					
+					else if (str.charAt(0) == '/')					//유저리스트 리셋 실행 명령어.
 						writer.println("-" + name + socket.getInetAddress());
-					else if (str.charAt(0) == '현')
+					else if (str.charAt(0) == '현')					//유저 리스트 리셋 명령어
 						userList.setText(str + "\n");
-					else if (str.charAt(0) == '-')
+					else if (str.charAt(0) == '-')					//유저 리스트 입력 명령어
 						userList.append(str + "\n");
-					else if (str.equals("3")) {
+
+					
+					else if (str.charAt(0) == '@')					//게임 정보 출력 명령어
+						;
+					else if (str.equals("3")) {						//클라이 언트 측 게임 실행 명령어
 						nameBox.setText("<html><center><br>리멤버 다이렉트<br><br><center></html>");
-						new Numbers();
+						new MemoryGame();
 					} else if (str.equals("4")) {
 						nameBox.setText("<html><center><br>두더지 게임!!!<br><br><center></html>");
 						new MoleGame(writer, name);
-					} else if (str.charAt(0) == '3') {
-						;
 					} else
 						msgView.append(str + "\n");
 				}
@@ -145,7 +140,7 @@ public class ClientHitEdit extends JFrame implements Runnable {
 	}
 
 	public void numberGame() {
-		Numbers ng = new Numbers();
+		MemoryGame ng = new MemoryGame();
 		int count = 4;
 		String[] howTo = ng.howTo();
 		String question;
@@ -191,7 +186,7 @@ public class ClientHitEdit extends JFrame implements Runnable {
 		writer.println("3" + name + count);
 	}
 
-	private void connect() {
+	public void connect() {
 		try {
 			msgView.append("서버소켓과의 연결을 시도합니다.\n");
 			socket = new Socket("127.0.0.1", 7777);
@@ -204,12 +199,4 @@ public class ClientHitEdit extends JFrame implements Runnable {
 			msgView.append("연결 실패..");
 		}
 	}
-
-	public static void main(String[] args) {
-		ClientHitEdit client = new ClientHitEdit("미니게임 천국");
-		client.setDefaultCloseOperation(EXIT_ON_CLOSE);
-		client.setVisible(true);
-		client.connect();
-	}
-
 }

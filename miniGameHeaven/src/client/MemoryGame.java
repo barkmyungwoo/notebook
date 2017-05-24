@@ -2,7 +2,7 @@ package client;
 
 import java.util.*;
 
-public class Numbers {
+public class MemoryGame {
 
 	Random r = new Random();
 	Scanner sc = new Scanner(System.in);

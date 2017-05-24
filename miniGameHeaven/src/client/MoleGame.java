@@ -29,11 +29,9 @@ public class MoleGame extends JFrame {
 	// public String scoreSend(){ //점수를 서버에 보내는 메소드
 	// return String.valueOf(scoreNum);
 	// }
-
 	public MoleGame() {
-
 		setTitle("두더지 게임"); // 게임타이틀
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // 종료시 프로그램종료
+		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE); // 종료시 프로그램종료
 		this.init(); // 화면구성 메소드
 		this.setSize(218, 282); // 크기
 		this.hole(); // 두더지 클릭메소드
@@ -41,15 +39,15 @@ public class MoleGame extends JFrame {
 		(new TimeThread()).start();
 		(new MoleUp()).start();
 		this.setVisible(true);
-
+		
 	}
-
+	
 	public MoleGame(PrintWriter writer, String name) {
 		this.writer = writer;
 		this.name = name;
 
 		setTitle("두더지 게임"); // 게임타이틀
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // 종료시 프로그램종료
+		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE); // 종료시 프로그램종료
 		this.init(); // 화면구성 메소드
 		this.setSize(218, 282); // 크기
 		this.hole(); // 두더지 클릭메소드
@@ -57,6 +55,7 @@ public class MoleGame extends JFrame {
 		(new TimeThread()).start();
 		(new MoleUp()).start();
 		this.setVisible(true);
+		
 	}
 
 	class TimeThread extends Thread { // 시간관리 스레드
@@ -68,8 +67,8 @@ public class MoleGame extends JFrame {
 					time.setText(String.valueOf(timeNum));
 
 					if (timeNum == 0) { // 시간종료시 쓰레드종료와 동시에 타임오버 창표시
+						writer.println("@"+name+":"+scoreNum);
 						JOptionPane.showMessageDialog(time, "T i m e O v e r\n" + "점수는 " + scoreNum + "점 입니다.");
-						writer.println(name+" :"+scoreNum+"점");
 						break;
 					}
 				} catch (InterruptedException e) {

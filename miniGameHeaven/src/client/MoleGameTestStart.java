@@ -1,6 +1,6 @@
 package client;
 
-public class MoleTest {
+public class MoleGameTestStart {
 
 	public static void main(String[] args) {
 		new MoleGame();
