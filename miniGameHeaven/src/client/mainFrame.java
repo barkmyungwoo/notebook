@@ -138,6 +138,7 @@ public class mainFrame extends JFrame implements Runnable {
 						new MoleGame(writer, name);
 					} else
 						msgView.append(str + "\n");
+						scroll.getVerticalScrollBar().setValue(scroll.getVerticalScrollBar().getMaximum());
 				}
 			} catch (IOException ie) {
 			}
