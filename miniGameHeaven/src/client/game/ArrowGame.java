@@ -61,7 +61,7 @@ public class ArrowGame extends JFrame {
 	
 	class JFrameWindowClosingEventHandler extends WindowAdapter{
 		public void windowClosing(WindowEvent e){
-			writer.println("@"+name+":"+stage);
+			writer.println("@"+name+":"+(-1));
 
 			JFrame frame = (JFrame)e.getWindow();
 			frame.dispose();

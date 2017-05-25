@@ -64,7 +64,7 @@ public class MoleGame extends JFrame {
 
 	class JFrameWindowClosingEventHandler extends WindowAdapter{
 		public void windowClosing(WindowEvent e){
-			writer.println("@"+name+":"+scoreNum);
+			writer.println("@"+name+":"+(-1));
 
 			JFrame frame = (JFrame)e.getWindow();
 			frame.dispose();

@@ -143,7 +143,7 @@ public class ServerStart {
 						i--;
 					}
 
-					int num = (int)(Math.random()*gameKinds);
+					int num = (int) (Math.random() * gameKinds);
 					System.out.println("게임 타입" + num);
 
 					switch (num) {
@@ -215,15 +215,12 @@ public class ServerStart {
 					if (cnt == gameTime) {
 						if (gameType == 3 || gameType == 4 || gameType == 5) {
 							gameOn = 0;
-							try {
-								bMan.sendToAll(
-										"====================== 승자는" + winnerName + "입니다. ======================");
-								Thread.sleep(2000);
-								winnerName = null;
-								winScore = 0;
-							} catch (InterruptedException e) {
-								e.printStackTrace();
-							}
+							if (winnerName == null) {
+								bMan.sendToAll("====================== 승자는 없습니다. ======================");
+							} else
+								bMan.sendToAll("====================== 승자는" + winnerName + "입니다. ======================");
+							winnerName = null;
+							winScore = 0;
 						} else {
 							gameOn = 0;
 							try {
@@ -253,7 +250,7 @@ public class ServerStart {
 				String[] str = new String[2];
 
 				if (gameMsg.charAt(0) == '@') {
-					System.out.println(gameMsg); 						//check
+					System.out.println(gameMsg); // check
 					endPlayer++;
 					str = gameMsg.replaceAll("@", "").split(":");
 					str[0] = str[0].trim();
@@ -265,7 +262,7 @@ public class ServerStart {
 					if (gameType == 5) {
 						if (Double.parseDouble(str[1]) < winScore) {
 							winnerName = str[0];
-							winScore = (int)Double.parseDouble(str[1]);
+							winScore = (int) Double.parseDouble(str[1]);
 						} else if (Double.parseDouble(str[1]) == winScore) {
 							winnerName += (", " + str[0]);
 						}
