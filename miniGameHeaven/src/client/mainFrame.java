@@ -128,17 +128,17 @@ public class mainFrame extends JFrame implements Runnable {
 						nameBox.setText("<html><center><br>방향 기억하기 게임<br><br><center></html>");
 						try {
 							UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");
-							new ArrowGame(writer, name);
+							new client.game.ArrowGame(writer, name);
 						} catch (Exception e) {
 							e.printStackTrace();
 						}
 
 					} else if (str.equals("4")) {
 						nameBox.setText("<html><center><br>두더지 게임!!!<br><br><center></html>");
-						new MoleGame(writer, name);
+						new client.game.MoleGame(writer, name);
 					} else if (str.equals("5")) {
 						nameBox.setText("<html><center><br>포켓몬 레이싱!!<br><br><center></html>");
-						new poketmon(writer, name);
+						new client.game.poketmonGame(writer, name);
 					} else
 						msgView.append(str + "\n");
 						scroll.getVerticalScrollBar().setValue(scroll.getVerticalScrollBar().getMaximum());
@@ -148,11 +148,10 @@ public class mainFrame extends JFrame implements Runnable {
 		}
 	}
 
-
 	public void connect() {
 		try {
 			msgView.append("서버소켓과의 연결을 시도합니다.\n");
-			socket = new Socket("192.168.20.39", 7777);
+			socket = new Socket("127.0.0.1", 7777);
 			msgView.append("채팅 준비가 완료되었습니다.\n");
 			reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 			writer = new PrintWriter(socket.getOutputStream(), true);

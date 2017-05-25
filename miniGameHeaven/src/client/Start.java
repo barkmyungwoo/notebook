@@ -11,7 +11,7 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 
-public class ClientStart {
+public class Start {
 
 	private JFrame nicframe;
 	private JTextField textField;
@@ -19,10 +19,10 @@ public class ClientStart {
 	String name;
 
 	public static void main(String[] args) {
-		new ClientStart();
+		new Start();
 	}
 
-	public ClientStart() {
+	public Start() {
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		System.out.println(screenSize);
 		int x = screenSize.width / 2 - 150;

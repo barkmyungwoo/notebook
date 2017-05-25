@@ -1,4 +1,4 @@
-package game;
+package server.game;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
@@ -9,7 +9,7 @@ import java.util.Scanner;
 public class TypingGame {
 
 	public String start() {
-		String fileName = "sentence.dat";
+		String fileName = "src/server/data/sentence.dat";
 		String str = null;
 		String str2 = null;
 		int line;

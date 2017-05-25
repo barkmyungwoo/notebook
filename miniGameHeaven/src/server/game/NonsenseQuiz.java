@@ -1,4 +1,4 @@
-package game;
+package server.game;
 
 import java.io.*;
 import java.util.Scanner;
@@ -6,7 +6,7 @@ import java.util.Scanner;
 public class NonsenseQuiz{
 
 	public String[] start() {
-		String fileName = "quiz.dat";
+		String fileName = "src/server/data/quiz.dat";
 		String[] str = new String[2];
 		String str2 = null;
 		int line;

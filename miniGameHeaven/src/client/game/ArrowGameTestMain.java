@@ -1,10 +1,10 @@
-package client;
+package client.game;
 
 import java.util.*;
 
 import javax.swing.UIManager;
 
-public class ArrowGameMain {
+public class ArrowGameTestMain {
 	public static void main(String[] args) {
 		try {
 			UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");
