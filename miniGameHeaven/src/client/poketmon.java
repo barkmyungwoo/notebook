@@ -11,7 +11,8 @@ package client;
 
  import java.awt.*; 
  import java.awt.event.ActionEvent; 
- import java.awt.event.ActionListener; 
+ import java.awt.event.ActionListener;
+import java.io.PrintWriter; 
  
  
  public class poketmon extends JFrame { 
@@ -22,6 +23,9 @@ package client;
  	private JTextField textField; 
  	double second = 0; 
  
+	private PrintWriter writer;
+	private String name;
+ 	
  	private JLabel label,ok,no; 
  	private JTextField selected; 
  	private JPanel panel; 
@@ -51,10 +55,12 @@ package client;
  				label4.setBounds(x4, 150, 100, 100); 
  				if (x2 >= endLine||x3 >= endLine||x4 >= endLine) { 
  					JOptionPane.showMessageDialog(panel, "탈락!");
+					writer.println("@"+name+":"+(-1));
  					second=0;
  					break; 
  				} 
  				if (x1 >= endLine) { 
+					writer.println("@"+name+":"+second);
  					JOptionPane.showMessageDialog(panel, "게임 종료.  "+second+"초 걸림"); 
  					break; 
  
@@ -68,9 +74,10 @@ package client;
  
  	JLabel imgLabel; 
  
- 	public poketmon() { 
-		new ComThread().start(); 
-
+ 	public poketmon(PrintWriter writer, String name) {
+		this.writer = writer;
+		this.name = name;
+		
 		setTitle("포켓몬 레이싱"); 
  		setSize(740, 574); 
  		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); 
@@ -157,7 +164,7 @@ package client;
  				if (a != null) { 
  					if (right == a.charAt(0)) {
  						
- 						x1 += 7; 
+ 						x1 += 15; 
  						textArea.setText("한칸 앞으로 이동!"); 
  						label1.setBounds(x1, 0, 100, 100); 
  						right = (char)(b.nextInt(25)+97);
@@ -184,8 +191,10 @@ package client;
  		label_1.setBounds(37, 459, 57, 15); 
  		panel.add(label_1); 
  		list.addListSelectionListener(new ListListener()); 
+
  		setVisible(true); 
- 
+		new ComThread().start(); 
+
  
  		imgLabel = new JLabel(); // 그림 넣을 라벨 생성 
  		imgLabel.setHorizontalAlignment(SwingConstants.RIGHT); 
@@ -218,7 +227,7 @@ package client;
  	} 
  
  
- 	public static void main(String[] args) { 
- 		poketmon frame = new poketmon(); 
- 	} 
+// 	public static void main(String[] args) { 
+// 		poketmon frame = new poketmon(); 
+// 	} 
  } 

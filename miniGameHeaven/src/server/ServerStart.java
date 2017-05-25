@@ -189,6 +189,13 @@ public class ServerStart {
 						gameTime = 20;
 						cnt = 0;
 						break;
+					case 5: // 두더지 게임
+						gameType = 5;
+						bMan.sendToAll("5");
+						gameOn = 1;
+						gameTime = 20;
+						cnt = 0;
+						break;
 					}
 				} else {
 					try {

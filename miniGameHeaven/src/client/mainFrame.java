@@ -136,6 +136,9 @@ public class mainFrame extends JFrame implements Runnable {
 					} else if (str.equals("4")) {
 						nameBox.setText("<html><center><br>두더지 게임!!!<br><br><center></html>");
 						new MoleGame(writer, name);
+					} else if (str.equals("5")) {
+						nameBox.setText("<html><center><br>포켓몬 레이싱!!<br><br><center></html>");
+						new poketmon(writer, name);
 					} else
 						msgView.append(str + "\n");
 						scroll.getVerticalScrollBar().setValue(scroll.getVerticalScrollBar().getMaximum());
