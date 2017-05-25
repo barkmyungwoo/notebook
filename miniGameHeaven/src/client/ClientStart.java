@@ -52,6 +52,9 @@ public class ClientStart {
 					JOptionPane.showMessageDialog(textField,"숫자나 특수 기호의 경우 첫글자로 사용 할 수 없어요.");
 					textField.setText("");
 				} 
+				else if (textField.getText().length()>10) {
+					JOptionPane.showMessageDialog(textField,"적당히 해라~ 넘 길다.");					
+				}
 				else {
 					name = textField.getText();
 					mainFrame client = new mainFrame("미니게임천국", name);

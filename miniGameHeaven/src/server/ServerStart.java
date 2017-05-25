@@ -16,7 +16,7 @@ public class ServerStart {
 	String gameMsg;
 
 	int user, winScore = 0, usercount = 0;
-
+	int endPlayer=0;
 	String winnerName;
 
 	Game_Thread gt = new Game_Thread();
@@ -72,10 +72,8 @@ public class ServerStart {
 
 					if (msg.charAt(0) != '-') {
 						if (gameOn == 1) {
-							if (gameType == 1 || gameType == 2 || gameType == 3) {
-								gameMsg = msg;
-								ac.check();
-							}
+							gameMsg = msg;
+							ac.check();
 						}
 					} else {
 						String[] tmp = new String[2];
@@ -117,7 +115,7 @@ public class ServerStart {
 		}
 
 		public void run() {
-			int gameTerm = 10; // 게임 REROAD 시간
+			int gameTerm = 15; // 게임 REROAD 시간
 			int gameTime = 60;
 			int gameKinds = 5; // 게임 종류
 			int cnt = 0; // 정답이 없을때 사용
@@ -145,7 +143,7 @@ public class ServerStart {
 						i--;
 					}
 
-					int num =  (int) (Math.random() * gameKinds);
+					int num = (int) (Math.random() * gameKinds);
 					System.out.println("게임 타입" + num);
 
 					switch (num) {
@@ -174,21 +172,21 @@ public class ServerStart {
 						bMan.sendToAll("· 베이스볼 게임. 중복되지 않는 4자리 숫자를 입력 하세요.");
 						gameOn = 1;
 						gameType = 2;
-						gameTime = 45;
+						gameTime = 30;
 						cnt = 0;
 						break;
 					case 3: // 화살표 게임
 						gameType = 3;
 						bMan.sendToAll("3");
 						gameOn = 1;
-						gameTime = 120;
+						gameTime = 30;
 						cnt = 0;
 						break;
 					case 4: // 두더지 게임
 						gameType = 4;
 						bMan.sendToAll("4");
 						gameOn = 1;
-						gameTime = 25;
+						gameTime = 20;
 						cnt = 0;
 						break;
 					}
@@ -196,9 +194,16 @@ public class ServerStart {
 					try {
 						Thread.sleep(1000);
 						cnt++;
+						
+						if(users.size()==endPlayer){
+							cnt=gameTime;
+							endPlayer=0;
+						}
+
 					} catch (InterruptedException e) {
 						e.printStackTrace();
 					}
+					
 					if (cnt == gameTime) {
 						if (gameType == 3 || gameType == 4) {
 							gameOn = 0;
@@ -206,6 +211,8 @@ public class ServerStart {
 								bMan.sendToAll(
 										"====================== 승자는" + winnerName + "입니다. ======================");
 								Thread.sleep(2000);
+								winnerName=null;
+								winScore =0;
 							} catch (InterruptedException e) {
 								e.printStackTrace();
 							}
@@ -238,6 +245,7 @@ public class ServerStart {
 				String[] str = new String[2];
 
 				if (gameMsg.charAt(0) == '@') {
+					endPlayer++;
 					str = gameMsg.replaceAll("@", "").split(":");
 					str[0] = str[0].trim();
 					str[1] = str[1].trim();
@@ -247,12 +255,13 @@ public class ServerStart {
 
 					if (Integer.parseInt(str[1]) > winScore) {
 						winnerName = str[0];
+						winScore = Integer.parseInt(str[1]);
 					} else if (Integer.parseInt(str[1]) == winScore) {
 						winnerName += (", " + str[0]);
 					}
 
-					System.out.println(winScore);
-					System.out.println(winnerName);
+					System.out.println("winScore : "+winScore);
+					System.out.println("winnerName : "+winnerName);
 
 				} else {
 					str = gameMsg.split(":");
