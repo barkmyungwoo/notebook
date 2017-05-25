@@ -149,7 +149,7 @@ public class mainFrame extends JFrame implements Runnable {
 	public void connect() {
 		try {
 			msgView.append("서버소켓과의 연결을 시도합니다.\n");
-			socket = new Socket("127.0.0.1", 7777);
+			socket = new Socket("192.168.20.39", 7777);
 			msgView.append("채팅 준비가 완료되었습니다.\n");
 			reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 			writer = new PrintWriter(socket.getOutputStream(), true);

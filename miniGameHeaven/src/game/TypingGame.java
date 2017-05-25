@@ -17,7 +17,7 @@ public class TypingGame {
 		Scanner sc = new Scanner(System.in);
 
 		try (BufferedReader fi = new BufferedReader(new FileReader(fileName));) { 						// 파일 불러오기.
-			line = (int) (Math.random() * 55 + 1);														//문장 랜덤 선택하기
+			line = (int) (Math.random() * 45 + 1);														//문장 랜덤 선택하기
 
 			for (int i = 0; i < line; i++) {
 				str = fi.readLine();

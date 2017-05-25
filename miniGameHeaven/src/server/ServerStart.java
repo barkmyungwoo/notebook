@@ -145,7 +145,7 @@ public class ServerStart {
 						i--;
 					}
 
-					int num = 3;// (int) (Math.random() * gameKinds);
+					int num =  (int) (Math.random() * gameKinds);
 					System.out.println("게임 타입" + num);
 
 					switch (num) {
@@ -181,14 +181,14 @@ public class ServerStart {
 						gameType = 3;
 						bMan.sendToAll("3");
 						gameOn = 1;
-						gameTime = 200;
+						gameTime = 120;
 						cnt = 0;
 						break;
 					case 4: // 두더지 게임
 						gameType = 4;
 						bMan.sendToAll("4");
 						gameOn = 1;
-						gameTime = 100;
+						gameTime = 25;
 						cnt = 0;
 						break;
 					}

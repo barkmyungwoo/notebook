@@ -13,7 +13,7 @@ public class NonsenseQuiz{
 		Scanner sc = new Scanner(System.in);
 
 		try (BufferedReader fi = new BufferedReader(new FileReader(fileName));) {
-			line = (int) (Math.random() * 18 + 1); // 문제 랜덤 선택하기
+			line = (int) (Math.random() * 84 + 1); // 문제 랜덤 선택하기
 
 			for (int i = 0; i < line; i++) {
 				str = fi.readLine().split("-");
