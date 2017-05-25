@@ -11,8 +11,12 @@ import javax.swing.*;
 
 public class ArrowGame extends JFrame {
 
+	public static void main(String[] args) {
+		new ArrowGame();
+	}
+	
 	private Font font1 = new Font("바탕", Font.BOLD, 60);
-	private Font font2 = new Font("바탕", Font.PLAIN, 20);
+	private Font font2 = new Font("바탕", Font.PLAIN, 15);
 	private PrintWriter writer;
 	private String name;
 	
@@ -28,6 +32,7 @@ public class ArrowGame extends JFrame {
 	int seqDemo = 0; // 프로그램 문제 시연 상태
 	int inputAwait = 0; // 사용자 입력 대기 상태
 	int exit=0;
+	int move=0;
 
 	ArrayList<String> alist = new ArrayList<String>(); // 문제 어레이
 	ArrayList<String> alist1 = new ArrayList<String>(); // 입력된 답안 어레이
@@ -40,6 +45,7 @@ public class ArrowGame extends JFrame {
 		this.frame();
 		this.addWindowListener(new JFrameWindowClosingEventHandler());
 		this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		new limit().start();
 		new ArrowGen().start();
 	}
 	
@@ -64,6 +70,25 @@ public class ArrowGame extends JFrame {
 		}
 	}
 
+	class limit extends Thread{
+		public void run(){
+			while (true) {
+				try {
+					Thread.sleep(1000);
+					move++;
+					System.out.println(move);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				} 
+				if(move >= 10){
+					writer.println("@"+name+":"+stage);
+					exit=1;
+					break;
+				}
+			}
+		}
+	}
+	
 	class ArrowGen {
 
 		public void start() {
@@ -106,7 +131,7 @@ public class ArrowGame extends JFrame {
 						jp7.setText("남은 순서 : " + (--remSeq)); // 시퀀스 길이
 						alist.add("UP");
 						jb2.setBackground(new Color(230, 50, 70));
-						System.out.println(alist);
+
 						try {
 							Thread.sleep(threadTime);
 							jb2.setBackground(new Color(115, 25, 35));
@@ -119,7 +144,7 @@ public class ArrowGame extends JFrame {
 						jp7.setText("남은 순서 : " + (--remSeq)); // 시퀀스 길이
 						alist.add("LEFT");
 						jb4.setBackground(new Color(70, 170, 200));
-						System.out.println(alist);
+
 						try {
 							Thread.sleep(threadTime);
 							jb4.setBackground(new Color(35, 85, 100));
@@ -132,7 +157,7 @@ public class ArrowGame extends JFrame {
 						jp7.setText("남은 순서 : " + (--remSeq)); // 시퀀스 길이
 						alist.add("RIGHT");
 						jb6.setBackground(new Color(220, 200, 70));
-						System.out.println(alist);
+
 						try {
 							Thread.sleep(threadTime);
 							jb6.setBackground(new Color(110, 100, 35));
@@ -145,7 +170,7 @@ public class ArrowGame extends JFrame {
 						jp7.setText("남은 순서 : " + (--remSeq)); // 시퀀스 길이
 						alist.add("DOWN");
 						jb8.setBackground(new Color(140, 250, 170));
-						System.out.println(alist);
+
 						try {
 							Thread.sleep(threadTime);
 							jb8.setBackground(new Color(70, 125, 85));
@@ -154,10 +179,9 @@ public class ArrowGame extends JFrame {
 							e.printStackTrace();
 						}
 					}
-
+					move=0;
 				}
 				jp3.setText("순서대로 입력 뒤 OK");
-				System.out.println("문제 : " + alist);
 				seqDemo = 0; // 프로그램 문제 출제 끝. 시퀀스 시연 끝.
 				inputAwait = 1; // 사용자 입력 대기
 			}
@@ -170,6 +194,7 @@ public class ArrowGame extends JFrame {
 					if (seqDemo == 0) {
 						alist1.add("UP");
 						jb2.setBackground(new Color(230, 50, 70));
+						move=0;
 					}
 				}
 
@@ -183,6 +208,7 @@ public class ArrowGame extends JFrame {
 					if (seqDemo == 0) {
 						alist1.add("LEFT");
 						jb4.setBackground(new Color(70, 170, 200));
+						move=0;
 					}
 				}
 
@@ -196,6 +222,7 @@ public class ArrowGame extends JFrame {
 					if (seqDemo == 0) {
 						alist1.add("RIGHT");
 						jb6.setBackground(new Color(220, 200, 70));
+						move=0;
 					}
 				}
 
@@ -209,6 +236,7 @@ public class ArrowGame extends JFrame {
 					if (seqDemo == 0) {
 						alist1.add("DOWN");
 						jb8.setBackground(new Color(140, 250, 170));
+						move=0;
 					}
 				}
 
@@ -221,6 +249,7 @@ public class ArrowGame extends JFrame {
 				public void mousePressed(MouseEvent e) {
 					if (seqDemo == 0) {
 						jb5.setBackground(Color.WHITE);
+						move=0;
 					}
 				}
 
@@ -229,7 +258,7 @@ public class ArrowGame extends JFrame {
 						// 제출된 답안이 정답인 경우
 						if (alist.equals(alist1)) {
 
-							System.out.println("제출된 답안 : " + alist1);
+
 							stage++;
 							remSeq = stage + 2;
 							jp3.setText("정답!!!");
@@ -240,7 +269,7 @@ public class ArrowGame extends JFrame {
 							if (threadTime <= 100) {
 								threadTime = 100;
 							}
-							System.out.println("속도 : " + threadTime);
+
 							jp1.setText("속도 증가...");
 							inputAwait = 0;
 						} else {
@@ -251,8 +280,6 @@ public class ArrowGame extends JFrame {
 							jp3.setText("");
 							jb5.setText("");
 							jp7.setText("GAME OVER!!!");
-							System.out.println("GAME OVER!");
-							System.out.println("최종 도달 단계 : " + (stage - 1));
 							jp9.setText("최종 도달 단계 : " + (stage - 1));
 							exit=1;
 						}
@@ -266,7 +293,7 @@ public class ArrowGame extends JFrame {
 
 		setTitle("화살표 기억 게임");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		this.setSize(600, 600);
+		this.setSize(500, 500);
 		this.setResizable(false);
 		this.setLocation(500, 100);
 
