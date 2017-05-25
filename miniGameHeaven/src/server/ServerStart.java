@@ -8,16 +8,16 @@ public class ServerStart {
 
 	private ServerSocket server;
 	private BManager bMan = new BManager();
+	ArrayList<String> users = new ArrayList<String>(); // 문제 어레이
 
 	int gameOn = 0, gameType = 0;
 	private String answer = null;
 	long start = 0, end = 0;
 	String gameMsg;
 
-	int user, winScore = 0, usercount=0;
+	int user, winScore = 0, usercount = 0;
 
 	String winnerName;
-	String[] users;
 
 	Game_Thread gt = new Game_Thread();
 	answerCheck ac = new answerCheck();
@@ -72,19 +72,18 @@ public class ServerStart {
 
 					if (msg.charAt(0) != '-') {
 						if (gameOn == 1) {
-							gameMsg = msg;
-							ac.check();
+							if (gameType == 1 || gameType == 2 || gameType == 3) {
+								gameMsg = msg;
+								ac.check();
+							}
 						}
-					}
-					
-					if(msg.charAt(0) == '-'){
+					} else {
 						String[] tmp = new String[2];
-						tmp = msg.replaceAll("-","").split("/");
+						tmp = msg.replaceAll("-", "").split("/");
 						tmp[0] = tmp[0].trim();
 						tmp[1] = tmp[1].trim();
-						users[usercount] = tmp[usercount];
-						System.out.println(usercount+" : "+users[usercount]);
-						usercount++;
+
+						users.add(tmp[0]);
 					}
 
 					if (msg != null) {
@@ -118,7 +117,7 @@ public class ServerStart {
 		}
 
 		public void run() {
-			int gameTerm = 30; // 게임 REROAD 시간
+			int gameTerm = 10; // 게임 REROAD 시간
 			int gameTime = 60;
 			int gameKinds = 5; // 게임 종류
 			int cnt = 0; // 정답이 없을때 사용
@@ -130,7 +129,6 @@ public class ServerStart {
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
-
 				if (gameOn == 0) {
 					for (int i = gameTerm; i >= 0;) {
 						System.out.println(i);
@@ -147,7 +145,7 @@ public class ServerStart {
 						i--;
 					}
 
-					int num = (int) (Math.random() * gameKinds);
+					int num = 3;// (int) (Math.random() * gameKinds);
 					System.out.println("게임 타입" + num);
 
 					switch (num) {
@@ -183,7 +181,7 @@ public class ServerStart {
 						gameType = 3;
 						bMan.sendToAll("3");
 						gameOn = 1;
-						gameTime = 22;
+						gameTime = 200;
 						cnt = 0;
 						break;
 					case 4: // 두더지 게임
@@ -205,7 +203,8 @@ public class ServerStart {
 						if (gameType == 3 || gameType == 4) {
 							gameOn = 0;
 							try {
-								bMan.sendToAll("====================== 승자는" + winnerName + "입니다. ======================");
+								bMan.sendToAll(
+										"====================== 승자는" + winnerName + "입니다. ======================");
 								Thread.sleep(2000);
 							} catch (InterruptedException e) {
 								e.printStackTrace();
@@ -242,7 +241,7 @@ public class ServerStart {
 					str = gameMsg.replaceAll("@", "").split(":");
 					str[0] = str[0].trim();
 					str[1] = str[1].trim();
-					
+
 					System.out.println(str[0]);
 					System.out.println(str[1]);
 
@@ -251,12 +250,11 @@ public class ServerStart {
 					} else if (Integer.parseInt(str[1]) == winScore) {
 						winnerName += (", " + str[0]);
 					}
-					
+
 					System.out.println(winScore);
 					System.out.println(winnerName);
-					
-				}
-				else {
+
+				} else {
 					str = gameMsg.split(":");
 					str[0] = str[0].trim();
 					str[1] = str[1].trim();
@@ -316,10 +314,9 @@ public class ServerStart {
 
 		synchronized void sendClientInfo(Socket sock) {
 			String info = " 현재 채팅 인원  : " + size(); // + sock.toString();
-			user=size();
-			users = new String[user];
+			user = size();
 			sendToAll(info);
-			usercount=0;
+			usercount = 0;
 			bMan.sendToAll("/"); // 이거 잘 쓰면 잼있을 듯.
 		}
 	}

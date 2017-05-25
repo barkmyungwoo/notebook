@@ -4,6 +4,8 @@ import java.awt.GraphicsConfiguration;
 import java.awt.GridLayout;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.PrintWriter;
 import java.util.Random;
 
@@ -13,6 +15,8 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
+
+import client.ArrowGame.JFrameWindowClosingEventHandler;
 
 public class MoleGame extends JFrame {
 	PrintWriter writer;
@@ -49,6 +53,7 @@ public class MoleGame extends JFrame {
 
 		setTitle("두더지 게임"); // 게임타이틀
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE); // 종료시 프로그램종료
+		this.addWindowListener(new JFrameWindowClosingEventHandler());
 		this.init(); // 화면구성 메소드
 		this.setSize(218, 282); // 크기
 		this.hole(); // 두더지 클릭메소드
@@ -59,12 +64,23 @@ public class MoleGame extends JFrame {
 		
 	}
 
+	class JFrameWindowClosingEventHandler extends WindowAdapter{
+		public void windowClosing(WindowEvent e){
+			writer.println("@"+name+":"+scoreNum);
+
+			JFrame frame = (JFrame)e.getWindow();
+			frame.dispose();
+			System.out.println("closed");
+		}
+	}
+	
+	
 	class TimeThread extends Thread { // 시간관리 스레드
 		public void run() {
 			do {
 				try {
 					Thread.sleep(1000);
-					timeNum -= 1;
+					timeNum--;
 					time.setText(String.valueOf(timeNum));
 
 					if (timeNum == 0) { // 시간종료시 쓰레드종료와 동시에 타임오버 창표시
@@ -318,5 +334,4 @@ public class MoleGame extends JFrame {
 		this.add(score);
 
 	}
-
 }

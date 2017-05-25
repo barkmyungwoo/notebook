@@ -31,7 +31,7 @@ public class mainFrame extends JFrame implements Runnable {
 		this.setTitle("미니게임 천국");
 		this.name = name;
 		this.setBounds(new Rectangle(100, 100, 890, 530));
-		this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 		this.setResizable(false);
 		nameBox = new JLabel("<html><br>" + name + "님 환영해요.<br><br><br></html>");
 		north = new JPanel();
@@ -116,7 +116,7 @@ public class mainFrame extends JFrame implements Runnable {
 					}
 
 					else if (str.charAt(0) == '/') // 유저리스트 리셋 실행 명령어.
-						writer.println("-" + name + socket.getInetAddress());
+						writer.println("-" + name + socket.getLocalAddress());
 					else if (str.charAt(0) == ' ') // 유저 리스트 리셋 명령어
 						userList.setText(str + "\n");
 					else if (str.charAt(0) == '-') // 유저 리스트 입력 명령어
@@ -145,57 +145,11 @@ public class mainFrame extends JFrame implements Runnable {
 		}
 	}
 
-	public void numberGame() {
-		MemoryGame ng = new MemoryGame();
-		int count = 4;
-		String[] howTo = ng.howTo();
-		String question;
-		for (int i = 0; i < howTo.length; i++) {
-			try {
-				nameBox.setText("<html><center><br>" + howTo[i] + "<br></center></html>");
-				Thread.sleep(3000);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-		}
-
-		while (true) {
-			question = ng.question(count);
-			System.out.println(question);
-			String[] direct = question.replaceAll("null", "").split(" ");
-
-			try {
-				nameBox.setText("<html><center><br>" + count + "단계 문제.<br></center></html>");
-				Thread.sleep(2000);
-			} catch (InterruptedException e1) {
-				e1.printStackTrace();
-			}
-
-			for (int j = 0; j < count; j++) {
-				nameBox.setText("<html><center><br>" + direct[j] + "<br></center></html>");
-				try {
-					Thread.sleep(1000);
-					nameBox.setText("<html><center><br> <br></center></html>");
-					Thread.sleep(1000);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-			}
-
-			nameBox.setText("<html><center><br>입력하세요!" + "<br></center></html>");
-
-			if (ng.answerCheck(sendBox.getText()))
-				count++;
-			else
-				break;
-		}
-		writer.println("3" + name + count);
-	}
 
 	public void connect() {
 		try {
 			msgView.append("서버소켓과의 연결을 시도합니다.\n");
-			socket = new Socket("192.168.20.39", 7777);
+			socket = new Socket("127.0.0.1", 7777);
 			msgView.append("채팅 준비가 완료되었습니다.\n");
 			reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 			writer = new PrintWriter(socket.getOutputStream(), true);
